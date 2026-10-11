@@ -9,6 +9,8 @@ Reading order for a new agent:
 5. **`frontend.md`** — pages, components, charting, map, styling.
 6. **`milestones.md`** — phased MVP build order with definitions of done.
 7. **`plan-m0-scaffold.md`** — the M0 scaffold implementation plan (build-vs-buy decision, DoD, verification).
+8. **`plan-m0-spots.md`** — the seed spot list plan.
+9. **`plan-m0-providers.md`** — the provider adapter + cache foundation (BFF core) plan.
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -23,7 +25,7 @@ Reading order for a new agent:
 - [x] Owner sign-off ("Ready to Code")
 - [x] M0a: monorepo scaffold & developer tooling (`pnpm lint/check/test/build` green)
 - [x] Seed spot list (19 SoCal spots, station IDs filled in)
-- [ ] Provider adapter/cache foundation
+- [x] Provider adapter/cache foundation
 - [ ] Implementation (GRIB2 decode → wave adapter → remaining adapters → frontend → ship)
 
 ## Using status markers

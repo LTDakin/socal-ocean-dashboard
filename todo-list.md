@@ -24,12 +24,12 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   *Done when:* the seed JSON exists with station IDs filled in. ✅
   (19 spots in `apps/web/src/lib/spots/spots.json`.)
 
-- [ ] **Build the provider adapter interface + cache foundation (BFF core).**
+- [x] **Build the provider adapter interface + cache foundation (BFF core).**
   The shared `getSpotData(spot, window) -> normalized bundle` contract, the TTL
   cache keyed `provider:spotId:window`, and the response envelope
   (`ok/asOf/stale/sources`). One stub adapter exercises it end to end.
-  *Done when:* the stub adapter returns a bundle through cache. Everything above
-  builds on this seam.
+  *Done when:* the stub adapter returns a bundle through cache. ✅
+  (`lib/providers` + `lib/cache`; see `docs/plan-m0-providers.md`.)
 
 ---
 

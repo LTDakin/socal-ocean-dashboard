@@ -13,7 +13,7 @@ data-audit gate and no library-hardening milestone. Each milestone has a
   strict; lint/format/test/type-check wired; CI runs on Node LTS.
 - [x] Seed spot list (~10–20 spots, mixed surf/dive/boat) in
   `apps/web/src/lib/spots/`, with station IDs filled in from `data-sources.md`.
-- [ ] Provider adapter interface + TTL cache foundation (the
+- [x] Provider adapter interface + TTL cache foundation (the
   `getSpotData(spot, window) -> normalized bundle` seam, the
   `provider:spotId:window` cache, and the `ok/asOf/stale/sources` envelope),
   exercised end to end by one stub adapter.
