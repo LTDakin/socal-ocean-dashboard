@@ -1,0 +1,170 @@
+[
+	{
+		"id": "46232",
+		"name": "Point Loma South, CA  (191)",
+		"lat": 32.517,
+		"lon": -117.425,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46235",
+		"name": "Imperial Beach Nearshore, CA (155)",
+		"lat": 32.57,
+		"lon": -117.169,
+		"owner": "SCRIPPS",
+		"met": "n"
+	},
+	{
+		"id": "46258",
+		"name": "Mission Bay West, CA (220)",
+		"lat": 32.749,
+		"lon": -117.502,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46254",
+		"name": "SCRIPPS Nearshore, CA (201)",
+		"lat": 32.868,
+		"lon": -117.267,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46273",
+		"name": "Torrey Pines Inner, CA (101)",
+		"lat": 32.93,
+		"lon": -117.274,
+		"owner": "SCRIPPS",
+		"met": "n"
+	},
+	{
+		"id": "46225",
+		"name": "Torrey Pines Outer, CA (100)",
+		"lat": 32.933,
+		"lon": -117.391,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46266",
+		"name": "Del Mar Nearshore, CA (153)",
+		"lat": 32.957,
+		"lon": -117.279,
+		"owner": "U.S. Army Corps of Engineers",
+		"met": "y"
+	},
+	{
+		"id": "46274",
+		"name": "Leucadia Nearshore, CA (262)",
+		"lat": 33.062,
+		"lon": -117.314,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46224",
+		"name": "Oceanside Offshore, CA (045)",
+		"lat": 33.178,
+		"lon": -117.472,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46219",
+		"name": "San Nicolas Island, CA (067)",
+		"lat": 33.226,
+		"lon": -119.891,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46275",
+		"name": "Red Beach Nearshore, CA (264)",
+		"lat": 33.291,
+		"lon": -117.501,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46277",
+		"name": "Green Beach Offshore, CA (271)",
+		"lat": 33.336,
+		"lon": -117.659,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46285",
+		"name": "Capistrano Beach Nearshore, CA (284)",
+		"lat": 33.445,
+		"lon": -117.68,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46253",
+		"name": "San Pedro South, CA (213)",
+		"lat": 33.576,
+		"lon": -118.182,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46222",
+		"name": "San Pedro, CA (092)",
+		"lat": 33.614,
+		"lon": -118.314,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46256",
+		"name": "Long Beach Channel, CA (215)",
+		"lat": 33.7,
+		"lon": -118.201,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46251",
+		"name": "Santa Cruz Basin, CA (203)",
+		"lat": 33.769,
+		"lon": -119.565,
+		"owner": "SCRIPPS",
+		"met": "n"
+	},
+	{
+		"id": "46221",
+		"name": "Santa Monica Bay, CA (028)",
+		"lat": 33.86,
+		"lon": -118.641,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46268",
+		"name": "Topanga Nearshore, CA (103)",
+		"lat": 34.022,
+		"lon": -118.578,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46218",
+		"name": "Harvest, CA (071)",
+		"lat": 34.452,
+		"lon": -120.78,
+		"owner": "SCRIPPS",
+		"met": "y"
+	},
+	{
+		"id": "46259",
+		"name": "Santa Lucia Escarpment, CA (222)",
+		"lat": 34.774,
+		"lon": -121.491,
+		"owner": "U.S. Army Corps of Engineers",
+		"met": "y"
+	}
+]

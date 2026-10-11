@@ -34,9 +34,24 @@ decode values (see `docs/milestones.md`).
 | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `wave_agg.stations.json`                                   | `https://erddap.cdip.ucsd.edu/erddap/tabledap/wave_agg.json?station_id,metaStationName,latitude,longitude&distinct()` |
 | `wave_agg.station-201.2026-10-08T00Z..2026-10-11T07Z.json` | `.../wave_agg.json?time,waveHs,waveTp,waveDp&station_id="201"&time>=2026-10-08T00:00:00Z`                             |
+| `wave_agg.station-201.recent.json`                         | `.../wave_agg.json?time,waveHs,waveTp,waveDp&station_id="201"&time>=2026-10-11T06:00:00Z`                             |
 
 Station **201 = Scripps Nearshore** (La Jolla). The `stations.json` snapshot is
-the station ↔ lat/lon registry the seed spot list links against.
+the station ↔ lat/lon registry the seed spot list links against. `recent.json`
+mirrors the `/current` adapter's short lookback window query.
+
+## `ndbc/` — NDBC realtime buoy observations
+
+| File                        | Source                                                                                        |
+| --------------------------- | --------------------------------------------------------------------------------------------- |
+| `realtime2.46254.txt`       | `https://www.ndbc.noaa.gov/data/realtime2/46254.txt` (SCRIPPS Nearshore — CDIP `201`'s twin)  |
+| `realtime2.46225.txt`       | `https://www.ndbc.noaa.gov/data/realtime2/46225.txt` (Torrey Pines Outer — CDIP `100`'s twin) |
+| `activestations.socal.json` | `https://www.ndbc.noaa.gov/activestations.xml`, filtered to 31.5–35°N / 121.5–116.5°W buoys   |
+
+The realtime2 files are trimmed to the first ~10 hours of rows (upstream keeps 45
+days). `activestations.socal.json` is the evidence for the CDIP→NDBC twin table in
+`lib/providers/ndbc.ts`: NDBC puts the partner CDIP station id in the name, e.g.
+`"SCRIPPS Nearshore, CA (201)"` → `46254`.
 
 ## `coastwatch/` — VIIRS Kd490 clarity
 
@@ -56,12 +71,16 @@ Station `9410230` (La Jolla, Scripps Wharf).
 | `predictions.9410230.2026-10-11.hourly.json`             | `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=h` |
 | `predictions.9410230.2026-10-11..2026-10-13.hourly.json` | `.../datagetter?begin_date=20261011&end_date=20261013&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=h`                 |
 | `predictions.9410230.2026-10-11..2026-10-13.hilo.json`   | `.../datagetter?begin_date=20261011&end_date=20261013&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=hilo`              |
+| `water_level.9410230.2026-10-11T16Z..19Z.json`           | `.../datagetter?product=water_level&station=9410230&begin_date=20261011 16:00&end_date=20261011 19:00&datum=MLLW&time_zone=gmt&units=metric&format=json`                |
 | `water_temperature.9410230.latest.json`                  | `.../datagetter?date=latest&station=9410230&product=water_temperature&time_zone=gmt&units=metric&format=json`                                                           |
+| `wind.9410230.latest.json`                               | `.../datagetter?date=latest&station=9410230&product=wind&time_zone=gmt&units=metric&format=json`                                                                        |
 
 The range pair (hourly + `hilo`) exercises the tide adapter: `interval=h` is the
 curve, `interval=hilo` the high/low events it merges in. `date=today` is
 day-granular and can't cover a 14-day window, so the adapter uses
-`begin_date`/`end_date` (up to 1 year).
+`begin_date`/`end_date` (up to 1 year). The `water_level` range and the
+`date=latest` water-temperature/wind snapshots exercise the `/current`
+observations adapter (see `docs/plan-m3-observations.md`).
 
 ## Adding fixtures
 

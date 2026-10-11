@@ -8,8 +8,17 @@
  */
 import { TtlCache } from '../cache';
 import type { Spot } from '../spots';
+import { createCdipAdapter, CDIP_PROVIDER_ID, type CdipObservations } from './cdip';
 import { createCoopsAdapter, COOPS_PROVIDER_ID, type CoopsTides } from './coops';
+import { createCoopsObsAdapter, COOPS_OBS_PROVIDER_ID, type CoopsObservations } from './coops-obs';
+import {
+	buildCurrentConditions,
+	observationWindow,
+	type CurrentConditions,
+	type ObservationBundle
+} from './current';
 import { createGfsWaveAdapter, defaultForecastWindow, type GfsWaveForecast } from './gfswave';
+import { createNdbcAdapter, NDBC_PROVIDER_ID, type NdbcObservations } from './ndbc';
 import { SpotDataService } from './service';
 import type { DataEnvelope, ForecastWindow } from './types';
 
@@ -19,9 +28,12 @@ export const providerCache = new TtlCache();
 /** The registered adapters. The stub is deliberately not registered. */
 export const gfsWaveAdapter = createGfsWaveAdapter();
 export const coopsAdapter = createCoopsAdapter();
+export const cdipAdapter = createCdipAdapter();
+export const ndbcAdapter = createNdbcAdapter();
+export const coopsObsAdapter = createCoopsObsAdapter();
 
 export const spotDataService = new SpotDataService({
-	adapters: [gfsWaveAdapter, coopsAdapter],
+	adapters: [gfsWaveAdapter, coopsAdapter, cdipAdapter, ndbcAdapter, coopsObsAdapter],
 	cache: providerCache
 });
 
@@ -78,3 +90,61 @@ export async function getSpotTides(
 	);
 	return envelope as TidesEnvelope;
 }
+
+export interface GetSpotCurrentOptions {
+	/** Defaults to `observationWindow(now)` (hour-quantized, 3 h lookback). */
+	window?: ForecastWindow;
+	/** Injectable clock (epoch ms) for ages/`observedAt`; defaults to `Date.now`. */
+	now?: number;
+	forceRefresh?: boolean;
+	signal?: AbortSignal;
+}
+
+/** Typed alias for the `/current` envelope's `data`. */
+export type CurrentEnvelope = DataEnvelope<{ current: CurrentConditions }>;
+
+/** The observation providers `/current` merges. */
+const OBSERVATION_PROVIDERS = [CDIP_PROVIDER_ID, NDBC_PROVIDER_ID, COOPS_OBS_PROVIDER_ID];
+
+/**
+ * The merged "now" snapshot the `/api/spot/[id]/current` route serves: buoy
+ * waves (CDIP, gap-filled by NDBC), water temp, wind, water level and tide state,
+ * each tagged with the provider/station/observation time behind it.
+ */
+export async function getSpotCurrent(
+	spot: Spot,
+	options: GetSpotCurrentOptions = {}
+): Promise<CurrentEnvelope> {
+	const now = options.now ?? Date.now();
+	const envelope = await spotDataService.getSpotData(
+		spot,
+		options.window ?? observationWindow(now),
+		{
+			providers: OBSERVATION_PROVIDERS,
+			forceRefresh: options.forceRefresh ?? false,
+			signal: options.signal
+		}
+	);
+
+	return {
+		ok: true,
+		spotId: envelope.spotId,
+		asOf: envelope.asOf,
+		stale: envelope.stale,
+		sources: envelope.sources,
+		data: {
+			current: buildCurrentConditions({
+				spotId: spot.id,
+				bundle: envelope.data as ObservationBundle,
+				now
+			})
+		}
+	};
+}
+
+/** Adapter payload types that make up the `/current` bundle. */
+export type CurrentBundle = {
+	cdip: CdipObservations;
+	ndbc: NdbcObservations;
+	'coops-obs': CoopsObservations;
+};

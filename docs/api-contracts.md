@@ -25,12 +25,32 @@ Errors use HTTP status + `{ "ok": false, "error": { "code", "message", "retryabl
 
 ### `GET /api/spots`
 List of curated spots (see `data-sources.md` spot model), with a lightweight
-`current` snapshot for list rendering (wave height, water temp, clarity band,
-tide state) so the dashboard renders without N+1 detail calls.
+`current` snapshot for list rendering (wave height, water temp, tide state; the
+clarity band joins it once `/clarity` exists) so the dashboard renders without
+N+1 detail calls.
 
 ### `GET /api/spot/[id]/current`
-Real-time conditions merged from nearest buoy (CDIP/NDBC) + tide + clarity.
-Contains entries that are genuinely "now", with per-field provenance.
+The merged real-time observation snapshot. `data.current`:
+`{ spotId, observedAt, waveHeightM, wavePeriodS, waveDirDeg, waterTempC,
+windSpeedMs, windDirDeg, waterLevelM (MLLW), tideState: "rising" | "falling" |
+"steady" | null, fields }`, where every non-null field has a provenance entry:
+
+```jsonc
+"fields": {
+  "waveHeightM": { "provider": "cdip", "stationId": "201",
+                   "observedAt": "2026-10-11T17:30:00Z", "ageSeconds": 3600 },
+  "windSpeedMs": { "provider": "coops-obs", "stationId": "9410230", ... }
+}
+```
+
+Merge rules: waves prefer the newest reading, CDIP first then its NDBC twin; a
+null sub-field (e.g. `waveDp`) is filled independently; water temp takes the buoy
+reading when the twin reports, else the shore sensor; wind takes the newest
+reading with speed *and* direction from one station; water level/tide state come
+from CO-OPS observations (tide state from the water-level rate, not from
+`/tides`). `observedAt` is the newest field's observation time. A spot with no
+usable observation is `404` `not_found`. Clarity is **not** merged here: it lags
+by 2-3 days and belongs to `/clarity`.
 
 ### `GET /api/spot/[id]/forecast`
 The core product. Both series for the full ~14-16 day window:

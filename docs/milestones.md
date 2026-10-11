@@ -55,16 +55,19 @@ See [`plan-m2-gfswave.md`](plan-m2-gfswave.md).
 
 ## M3 — Tides, real-time observations & clarity
 - [x] CO-OPS adapter (tide predictions + water level), CDIP buoy obs (IOOS
-  ERDDAP JSON), NDBC gap-fill. — **tides half done** (`coops` adapter +
-  `GET /api/spot/[id]/tides`; see [`plan-m3-tides.md`](plan-m3-tides.md)).
-  Water level + CDIP/NDBC remain the real-time observations service.
+  ERDDAP JSON), NDBC gap-fill. — **tides** (`coops` adapter +
+  `GET /api/spot/[id]/tides`; see [`plan-m3-tides.md`](plan-m3-tides.md)) and
+  **observations** (`cdip` + `ndbc` + `coops-obs` adapters +
+  `GET /api/spot/[id]/current`; see
+  [`plan-m3-observations.md`](plan-m3-observations.md)).
 - [ ] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL), labeled "observed, not
   forecast".
-- [ ] `current`, `tides`, and `clarity` endpoints per contracts. — `tides` ✅
+- [ ] `current`, `tides`, and `clarity` endpoints per contracts. — `tides` ✅,
+  `current` ✅, `clarity` next.
 
-**DoD:** `current` shows merged buoy+tide+clarity fields with provenance;
-`tides` renders an MLLW curve for a spot; `clarity` shows observed clarity +
-rating + `asOf`.
+**DoD:** `current` shows merged buoy+tide fields with provenance (`clarity` joins
+it via `/clarity`); `tides` renders an MLLW curve for a spot; `clarity` shows
+observed clarity + rating + `asOf`.
 **Verify:** live smoke tests against each upstream.
 
 ---

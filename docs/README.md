@@ -15,6 +15,8 @@ Reading order for a new agent:
 11. **`plan-m2-gfswave.md`** — the GFS-Wave adapter + `/forecast` endpoint plan.
 12. **`plan-m2-derive.md`** — the derived-metrics (`lib/derive`) plan: Secchi rating bands + surf score.
 13. **`plan-m3-tides.md`** — the CO-OPS tides service + `/tides` endpoint plan.
+14. **`plan-m3-observations.md`** — the real-time observations service
+    (CDIP + NDBC gap-fill + CO-OPS observations) + `/current` endpoint plan.
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -33,8 +35,11 @@ Reading order for a new agent:
 - [x] M1: GRIB2 decode seam (`lib/grib2`; fixtures decode to the cross-checked values)
 - [x] M2a: GFS-Wave adapter + `GET /api/spot/[id]/forecast` (live-verified)
 - [x] M2b: derived metrics (`lib/derive`): daily aggregates, Secchi rating bands, surf score
-- [~] M3: tides service (`coops` adapter + `GET /api/spot/[id]/tides`)
-- [ ] Implementation (remaining adapters → frontend → ship)
+- [x] M3a: tides service (`coops` adapter + `GET /api/spot/[id]/tides`)
+- [x] M3b: real-time observations (`cdip`, `ndbc`, `coops-obs` adapters +
+      `GET /api/spot/[id]/current` with per-field provenance)
+- [ ] Implementation (remaining adapters → frontend → ship); next up: the clarity
+      service (`coastwatch` adapter + `GET /api/spot/[id]/clarity`)
 
 ## Using status markers
 

@@ -68,10 +68,13 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   (`coops` adapter + `GET /api/spot/[id]/tides`; fixture-backed, live-verified.
   See `docs/plan-m3-tides.md`. Water level belongs to the observations service.)
 
-- [ ] **Build the real-time observations service.**
+- [x] **Build the real-time observations service.**
   CDIP buoy obs (IOOS ERDDAP JSON) + NDBC gap-fill, merged with tide/clarity into
-  the `current` endpoint with per-field provenance.
+  the `current` endpoint with per-field provenance. ✅
   *Done when:* `current` returns genuine "now" values.
+  (`cdip` + `ndbc` + `coops-obs` adapters + `GET /api/spot/[id]/current`;
+  live-verified. See `docs/plan-m3-observations.md`. Clarity joins `/current` when
+  the clarity service lands — it is observed, days late, and has its own endpoint.)
 
 - [ ] **Build the clarity service.**
   CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL) and the `clarity` endpoint,

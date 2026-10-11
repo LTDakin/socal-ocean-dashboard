@@ -88,6 +88,8 @@ queries used), so tests and dev never hit the live APIs.
     There are **no per-station `edu_ucsd_cdip_<id>` datasets** on this ERDDAP.
   - Query:
     `tabledap/wave_agg.json?time,waveHs,waveTp,waveDp&station_id="201"&time>=YYYY-MM-DDTHH:MM:SSZ`
+    (the `/current` adapter's short lookback window; an empty window comes back as
+    HTTP **404** `no matching results`, treated as "no observation", not an error).
   - Station registry:
     `tabledap/wave_agg.json?station_id,metaStationName,latitude,longitude&distinct()`
   - Confirmed SoCal stations: **`073`** Scripps Pier, **`201`** Scripps
@@ -125,9 +127,24 @@ queries used), so tests and dev never hit the live APIs.
   Pier; `9411065` Port Hueneme; `9411189` Ventura; `9411340` Santa Barbara;
   `9412110` Port San Luis.
 - **Currents:** `product=currents` exists but uses a separate current-station ID
-  space; link per spot when the observations adapter is built.
+  space; link per spot when needed.
+- **Observation products** (the `/current` adapter): `water_level` pulled as a
+  range (6-min rows, `datum=MLLW`) so the adapter can derive the tide *state* from
+  the water-level rate, plus `water_temperature` and `wind` with `date=latest` so
+  a lagging sensor still reports its last value. `begin_date`/`end_date` accept
+  `YYYYMMDD HH:MM` in GMT — the space must be sent as `%20`, not `+`.
 
 ### NDBC
 
-- To confirm when the observations adapter is built (plain-text `realtime2`
-  files + ERDDAP mirrors).
+- **Realtime text files:** `https://www.ndbc.noaa.gov/data/realtime2/<station>.txt`
+  — whitespace-separated 18-column rows (WSPD/WDIR, WVHT/DPD/APD/MWD, PRES,
+  ATMP/WTMP…), updated ~10 min, `MM` for missing values, no key required.
+- **Station registry:** `https://www.ndbc.noaa.gov/activestations.xml`. NDBC
+  republishes the CDIP SoCal buoys and puts the **CDIP station id in the name**,
+  e.g. `"SCRIPPS Nearshore, CA (201)"` → `46254`; the adapter resolves a spot's
+  `cdipBuoyId` through that twin table (`lib/providers/ndbc.ts`; SoCal subset
+  committed at `fixtures/ndbc/activestations.socal.json`).
+- SoCal twins that map onto seed spots: `201→46254`, `191→46232`, `284→46285`,
+  `213→46253`, `215→46256`, `092→46222`. The other seed buoys are CDIP-only.
+- **Sanity check:** CDIP `201` and NDBC `46254` (the same buoy) agreed on
+  2026-10-11 ~17Z — `waveHs` 1.98 m vs 2.0 m.
