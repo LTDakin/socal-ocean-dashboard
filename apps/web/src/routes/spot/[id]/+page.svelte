@@ -74,6 +74,8 @@
 
 	<ConditionsPanel {current} {now} {units} />
 
+	<ClarityCard {clarity} {now} {units} />
+
 	{#await data.forecast}
 		<section class={section}>
 			<h2 class={heading}>Surf score</h2>
@@ -144,8 +146,6 @@
 			</p>
 		{/if}
 	</section>
-
-	<ClarityCard {clarity} {now} {units} />
 
 	{#await data.provenance then provenance}
 		<ProvenanceFooter sources={provenance.sources} generatedAt={provenance.generatedAt} {now} />

@@ -83,12 +83,9 @@
 </script>
 
 <section class="rounded-xl border border-sea/25 bg-deep/40 p-4">
-	<header class="flex flex-wrap items-baseline justify-between gap-2">
-		<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Now</h2>
+	<header class="flex flex-wrap items-baseline">
 		{#if current?.observedAt}
-			<p class="text-xs text-foam/50">
-				Observed {formatRelativeTime(current.observedAt, now)}
-			</p>
+		    <h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Observed {formatRelativeTime(current.observedAt, now)}</h2>
 		{/if}
 	</header>
 

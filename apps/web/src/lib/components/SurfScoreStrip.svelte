@@ -38,7 +38,7 @@
 
 <section class="rounded-xl border border-sea/25 bg-deep/40 p-4">
 	<header class="flex flex-wrap items-baseline justify-between gap-2">
-		<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Surf score</h2>
+		<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Surf forecast</h2>
 		<p class="text-xs text-foam/40">Experimental · best hour each day</p>
 	</header>
 
