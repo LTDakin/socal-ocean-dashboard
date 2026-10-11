@@ -24,6 +24,10 @@ coverage/
 npm-debug.log*
 pnpm-debug.log*
 
+# Usage rules live in scratch/README.md.
+scratch/*
+!scratch/README.md
+
 # Editor / OS
 .DS_Store
 .idea/
