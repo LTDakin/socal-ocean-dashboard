@@ -1,24 +1,26 @@
 # Milestones & Definitions of Done
 
-Build order is dependency-first: the GRIB2 codec → wave adapter → remaining
-adapters → frontend. Each milestone has a **definition of done (DoD)** and
-**verification** step. Go/no-go between milestones is explicit.
+Build order is dependency-first: scaffold → GRIB2 decode → wave adapter →
+remaining adapters → frontend → ship. MVP scope assumes upstream APIs and the
+GRIB2 library (`@mattnucc/gribberish`) work as documented — there is no separate
+data-audit gate and no library-hardening milestone. Each milestone has a
+**definition of done (DoD)**. Go/no-go between milestones is explicit.
 
 ---
 
-## M0 — Scaffold & data audit
+## M0 — Scaffold, spots & BFF core
 - [x] pnpm workspaces monorepo (`apps/web`); SvelteKit 3 + Tailwind v4; TS
   strict; lint/format/test/type-check wired; CI runs on Node LTS.
-- [ ] Complete the **data audit** from `data-sources.md`: confirm exact NOMADS
-  Grib Filter URL/dirs, a real GFS-Wave sample file saved to
-  `apps/web/fixtures/`, CDIP ERDDAP dataset IDs, CoastWatch NRT Kd490
-  dataset, CO-OPS station IDs for first spots.
-- [ ] Curate seed spot list (~10-20 spots, mixed surf/dive/boat) in
-  `apps/web/src/lib/spots/`.
+- [ ] Seed spot list (~10–20 spots, mixed surf/dive/boat) in
+  `apps/web/src/lib/spots/`, with station IDs filled in from `data-sources.md`.
+- [ ] Provider adapter interface + TTL cache foundation (the
+  `getSpotData(spot, window) -> normalized bundle` seam, the
+  `provider:spotId:window` cache, and the `ok/asOf/stale/sources` envelope),
+  exercised end to end by one stub adapter.
 
-**DoD:** monorepo green on `pnpm test/lint/build`; audit doc updated with every
-confirmed URL/dataset ID; spot seed file exists.
-**Verify:** empty app boots locally; fixtures play through the (stub) codec.
+**DoD:** monorepo green on `pnpm test/lint/build`; spot seed file exists; the
+stub adapter returns a bundle through cache.
+**Verify:** empty app boots locally.
 
 ---
 
@@ -26,86 +28,71 @@ confirmed URL/dataset ID; spot seed file exists.
 - [x] ~~In-house codec~~ — superseded at M0: decode through the
   `@mattnucc/gribberish` wrapper in `apps/web/src/lib/grib2` (fetch a NOMADS
   subset, or a single field via `.idx` Range, → typed fields with `validTime`).
-- [ ] Golden test against a committed GFS-Wave fixture, cross-checked vs `wgrib2`.
 - [ ] Small `inspect`/field-index helper so adapters can scan fields cheaply.
 
-**DoD:** decodes the M0 GFS-Wave fixture with values matching `wgrib2`;
-unsupported templates are surfaced clearly (not silent NaN).
-**Verify:** `pnpm test` in `apps/web`; manual diff of one field vs `wgrib2`.
+**DoD:** one real GFS-Wave subset decodes to the expected fields.
+**Verify:** `pnpm test` in `apps/web`; manual look at one field.
 
 ---
 
-## M2 — GFS-Wave adapter + forecast endpoint
-- [ ] Adapter fetches per-cycle region-subsets (small downloads), index/scan
-  fields, builds hourly + daily series per the forecast contract.
+## M2 — GFS-Wave adapter, forecast endpoint & derived metrics
+- [ ] Adapter fetches per-cycle region-subsets, indexes/scans fields, builds
+  hourly + daily series per the forecast contract.
 - [ ] Cache (per-spot, per-cycle, TTL ~1 h) + stale-if-error.
-- [ ] `GET /api/spot/[id]/forecast` green with provenance
-  (`modelRun`, `asOf`).
+- [ ] `GET /api/spot/[id]/forecast` green with provenance (`modelRun`, `asOf`).
+- [ ] `lib/derive`: Secchi depth (ZSD ≈ 1.44/Kd490), rating bands, daily
+  aggregations, experimental surf score.
 
 **DoD:** one live SoCal spot returns a full ~14-day forecast through the BFF;
-second request within TTL hits cache (no upstream call).
-**Verify:** contract test against a recorded fixture; live smoke test against
-NOMADS; 16-day series values sanity-checked against Open-Meteo (same model).
+a fixture yields a deterministic score and ratings.
+**Verify:** live smoke test against NOMADS.
 
 ---
 
-## M3 — Tides + real-time observations
+## M3 — Tides, real-time observations & clarity
 - [ ] CO-OPS adapter (tide predictions + water level), CDIP buoy obs (IOOS
   ERDDAP JSON), NDBC gap-fill.
-- [ ] `current` and `tides` endpoints per contracts.
+- [ ] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL), labeled "observed, not
+  forecast".
+- [ ] `current`, `tides`, and `clarity` endpoints per contracts.
 
 **DoD:** `current` shows merged buoy+tide+clarity fields with provenance;
-`tides` renders a correct MLLW curve for a spot.
-**Verify:** contract tests; cross-check one tide station vs CO-OPS web output.
+`tides` renders an MLLW curve for a spot; `clarity` shows observed clarity +
+rating + `asOf`.
+**Verify:** live smoke tests against each upstream.
 
 ---
 
-## M4 — Clarity + derived metrics
-- [ ] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL; explicit cloud
-  gaps/latency in payload).
-- [ ] `clarity` endpoint + `lib/derive`: Secchi depth (ZSD ≈ 1.44/Kd490),
-  rating bands, daily aggregations, experimental surf score.
-
-**DoD:** spot shows observed clarity with rating + "asOf" labeling; surf score
-deterministic and unit-tested.
-**Verify:** unit tests for derivation thresholds; visual check against known
-clear/murky periods.
-
----
-
-## M5 — Frontend shell + spots
+## M4 — Frontend
 - [ ] App shell, routing, Tailwind tokens, spots store + favorites, dashboard
-  spot cards, `about` page with attribution.
-- [ ] ECharts wrapper, chart empty/loading/stale states.
+  spot cards, ECharts wrapper, chart empty/loading/stale states.
+- [ ] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
+  condition panel, provenance footer.
+- [ ] Attribution + safety disclaimers in the app footer (minimal about page).
 
-**DoD:** `/` lists spots with current snapshots; navigation to empty spot
-detail renders correct empty states.
-**Verify:** e2e against recorded fixtures (no live upstream).
-
----
-
-## M6 — Spot detail + map
-- [ ] Wave/swell chart, tide curve, clarity card, surf-score strip, condition
-  panel, provenance footer.
-- [ ] MapLibre spot map with condition-driven colors.
-
-**DoD:** spot detail fully functional for one spot of each type
-(surf/dive/boat); map markers reflect condition colors.
-**Verify:** manual QA of all three spot types; colorblind/accessibility check;
-chart day-level zoom works.
+**DoD:** `/` lists spots with current snapshots; spot detail works for one spot
+of each type (surf/dive/boat); attribution and disclaimers are visible.
+**Verify:** manual QA against fixtures.
 
 ---
 
-## M7 — Hardening + deploy
-- [ ] Rate limiting/retry/backoff, pre-warm cron, `/api/health`, error
-  telemetry.
-- [ ] Deploy (Node host + CDN); env-driven config; safety disclaimers.
-- [ ] Pin/verify the `@mattnucc/gribberish` prebuilt binaries on the deploy host.
+## M5 — Ship
+- [ ] Deploy (Node host + CDN); env-driven config.
 
-**DoD:** deployed site passes multi-user smoke (cache holds upstream calls near
-constant).
-**Verify:** load test (N concurrent users → upstream request count stays in the
-tens).
+**DoD:** the deployed site serves a working dashboard and spot detail.
+**Verify:** manual smoke test of the deployed URL.
+
+---
+
+## Deferred (post-MVP)
+
+Not needed to validate the MVP; revisit once the core loop is live.
+
+- MapLibre spot map with condition-driven colors.
+- Full about / methodology page.
+- Resilience layer: rate limiting, retry/backoff, pre-warm cron, error telemetry.
+- Pinning/verifying `@mattnucc/gribberish` prebuilt binaries on the deploy host.
+- Contract/golden test coverage beyond the minimum needed to trust a value.
 
 ---
 
@@ -113,9 +100,8 @@ tens).
 
 | Risk | Mitigation |
 |---|---|
-| GRIB2 packing edge cases | Golden fixtures vs `wgrib2`; explicit unsupported-template errors |
-| NOMADS endpoint churn (OPeNDAP deprecation) | Adapter isolation; audit at M0; Open-Meteo as dev cross-check |
+| GRIB2 packing edge cases | Surface decode failures clearly (no silent NaN) |
+| NOMADS endpoint churn | Adapter isolation; Open-Meteo as dev cross-check |
 | Visibility data is observed, not forecast | UI labeling + "asOf"; set expectations in `/about` |
 | Open-Meteo non-commercial clause | Not used for v1 product data; dev-only cross-check |
-| Upstream downtime | Stale-if-error + per-provider health + pre-warm |
-| API contract drift | Contracts are the source of truth; contract tests with fixtures |
+| Upstream downtime | Stale-if-error (full resilience layer deferred) |

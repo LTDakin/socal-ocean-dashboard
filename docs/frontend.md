@@ -1,8 +1,8 @@
 # Frontend (apps/web)
 
-SvelteKit (Svelte 5, runes) + TypeScript + Tailwind. ECharts for all charting;
-MapLibre GL JS for the map with free vector tiles (e.g., Protomaps or
-OpenFreeMap/Stadia). Data is in SI internally; units shown to users follow
+SvelteKit (Svelte 5, runes) + TypeScript + Tailwind. ECharts for all charting.
+The MapLibre map (free vector tiles, e.g. Protomaps or OpenFreeMap/Stadia) is
+deferred to post-MVP. Data is in SI internally; units shown to users follow
 audience convention (surfers/boaters think in feet; keep metric accents like
 °C optional via a settings toggle).
 
@@ -12,8 +12,9 @@ audience convention (surfers/boaters think in feet; keep metric accents like
 |---|---|
 | `/` | **Dashboard:** spot cards (current wave height, water temp, clarity band, tide state), favorites persisted locally, quick jump. |
 | `/spot/[id]` | **Spot detail:** current conditions panel, 14-day wave/swell chart, daily surf-score strip, tide curve, clarity card (labeled "observed"), data provenance footer (model run, asOf). |
-| `/map` | **Map:** spot markers colored by a chosen condition (wave height / clarity band); click → detail. |
-| `/about` | Methodology + data credits/attribution + disclaimers (blast radius: safety product disclaimers). |
+| `/about` | **Attribution:** data credits + safety disclaimers (minimal about page). |
+
+> Deferred: `/map` route with condition-colored spot markers (post-MVP).
 
 ## Key components
 
@@ -25,8 +26,9 @@ audience convention (surfers/boaters think in feet; keep metric accents like
   not forecast" tag.
 - `SurfScoreStrip` — per-day derived score (0-10).
 - `ConditionsPanel` — "now" snapshot with per-field provenance.
-- `SpotMap` (MapLibre) — clustered markers, condition-driven color scale,
-  popup → detail.
+
+> Deferred: `SpotMap` (MapLibre) — clustered markers, condition-driven color
+> scale, popup → detail.
 
 ## Conventions
 
@@ -49,6 +51,5 @@ audience convention (surfers/boaters think in feet; keep metric accents like
 
 ## Verification
 
-- End-to-end: one spot renders full detail using recorded/cached fixtures
-  (no live upstream in CI).
-- Manual QA at M6: verify each spot type (surf/dive/boat) reads sensibly.
+- Manual QA at M4: verify each spot type (surf/dive/boat) reads sensibly against
+  fixtures.
