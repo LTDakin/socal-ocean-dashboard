@@ -8,16 +8,17 @@ via a settings toggle).
 
 ## Scope
 
-**Surf and dive only — no boating.** The dashboard's top level is *best surf
-spots* and *dive spots*; the seed list (`lib/spots/spots.json`), the spot model
-(`data-sources.md`), and every derived metric are scoped to those two use cases
-(the `boat` type and the boat-only harbor spots were dropped).
+**Surf and dive only — no boating.** The dashboard's top level toggles between
+*best surf spots* and *dive spots* (one activity at a time, so each activity's
+decision data reads cleanly); the seed list (`lib/spots/spots.json`), the spot
+model (`data-sources.md`), and every derived metric are scoped to those two use
+cases (the `boat` type and the boat-only harbor spots were dropped).
 
 ## Pages
 
 | Route | Purpose |
 |---|---|
-| `/` | **Dashboard:** spot cards (current wave height, water temp, clarity band, tide state), favorites persisted locally, quick jump. |
+| `/` | **Dashboard:** Surf/Dive toggle, spot cards (current wave height, water temp, clarity band, tide state), favorites persisted locally, quick jump. Spots rank by how much information they carry (`compareSpotsByInfo`), then alphabetically — no longer a flat A–Z list. |
 | `/spot/[id]` | **Spot detail:** current conditions panel, 14-day wave/swell chart, daily surf-score strip, tide curve, clarity card (labeled "observed"), data provenance footer (model run, asOf). |
 | `/about` | **Attribution & methodology:** data credits, how each number is derived, and safety disclaimers. |
 
@@ -55,6 +56,10 @@ spots* and *dive spots*; the seed list (`lib/spots/spots.json`), the spot model
   container and support day-level zoom.
 - **Empty/loading/stale states:** every chart/card renders a deliberate
   loading, empty, or "stale as of …" state (never a blank pane).
+- **List ordering:** the dashboard never sorts flat A–Z. Favorites pin first,
+  then `compareSpotsByInfo` (`lib/providers/overview.ts`) surfaces spots with
+  real data and pushes unobserved/sparse spots to the bottom, with the name as
+  the final tiebreak.
 - **Styling:** Tailwind with a small design-token layer (ocean palette, type
   scale). Dark-mode-first fits the dashboard aesthetic.
 - **Accessibility:** charts get table/alt fallbacks; color scales avoid

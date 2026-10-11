@@ -2,40 +2,50 @@
 	import { invalidateAll } from '$app/navigation';
 	import SpotCard from '../lib/components/SpotCard.svelte';
 	import { formatRelativeTime, regionLabel } from '../lib/format';
-	import type { SpotOverview } from '../lib/providers/overview';
+	import { compareSpotsByInfo, type SpotOverview } from '../lib/providers/overview';
+	import type { SpotType } from '../lib/spots';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
+	/** The two use cases have different decision data, so they get separate views. */
+	const activities: { id: SpotType; label: string }[] = [
+		{ id: 'surf', label: 'Surf' },
+		{ id: 'dive', label: 'Dive' }
+	];
+
 	let query = $state('');
 	let favoritesOnly = $state(false);
 	let refreshing = $state(false);
+	let activity = $state<SpotType>('surf');
 
 	const spots = $derived(data.overview?.data.spots ?? []);
 
-	/** Apply the text filter + favorites toggle, then pin favorites to the top. */
+	/**
+	 * Apply the text + activity + favorites filters, then pin favorites to the
+	 * top and rank the rest by how much information they actually carry
+	 * (`compareSpotsByInfo`) so data-rich spots lead and sparse ones trail.
+	 */
 	function visible(list: SpotOverview[]): SpotOverview[] {
 		const needle = query.trim().toLowerCase();
 		return list
 			.filter((spot) => {
+				if (!spot.types.includes(activity)) return false;
 				if (favoritesOnly && !favorites.has(spot.id)) return false;
 				if (!needle) return true;
 				return `${spot.name} ${regionLabel(spot.region)}`.toLowerCase().includes(needle);
 			})
 			.sort(
 				(a, b) =>
-					Number(favorites.has(b.id)) - Number(favorites.has(a.id)) || a.name.localeCompare(b.name)
+					Number(favorites.has(b.id)) - Number(favorites.has(a.id)) || compareSpotsByInfo(a, b)
 			);
 	}
 
-	// Surf first, then dive: a spot that does both lives under Surf so each spot
-	// appears once.
-	const surfSpots = $derived(visible(spots.filter((spot) => spot.types.includes('surf'))));
-	const diveSpots = $derived(
-		visible(spots.filter((spot) => spot.types.includes('dive') && !spot.types.includes('surf')))
-	);
-	const empty = $derived(surfSpots.length === 0 && diveSpots.length === 0);
+	// A spot that does both surf and dive appears under each activity, but the
+	// toggle shows one activity at a time so it is only ever listed once.
+	const activitySpots = $derived(visible(spots));
+	const empty = $derived(activitySpots.length === 0);
 
 	async function refresh(): Promise<void> {
 		refreshing = true;
@@ -73,6 +83,24 @@
 				</p>
 			</div>
 			<div class="flex flex-wrap items-center gap-2">
+				<div
+					class="inline-flex overflow-hidden rounded-md border border-sea/40"
+					role="group"
+					aria-label="Show conditions for"
+				>
+					{#each activities as option (option.id)}
+						<button
+							type="button"
+							class="px-3 py-1.5 text-sm transition {activity === option.id
+								? 'bg-surf/25 text-foam'
+								: 'text-foam/60 hover:bg-sea/15 hover:text-foam'}"
+							aria-pressed={activity === option.id}
+							onclick={() => (activity = option.id)}
+						>
+							{option.label}
+						</button>
+					{/each}
+				</div>
 				<input
 					bind:value={query}
 					type="search"
@@ -126,26 +154,15 @@
 			No spots match your filters.
 		</section>
 	{:else}
-		{#if surfSpots.length > 0}
-			<section class="flex flex-col gap-3">
-				<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Surf spots</h2>
-				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					{#each surfSpots as spot (spot.id)}
-						<SpotCard {spot} now={data.now} />
-					{/each}
-				</div>
-			</section>
-		{/if}
-
-		{#if diveSpots.length > 0}
-			<section class="flex flex-col gap-3">
-				<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">Dive spots</h2>
-				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					{#each diveSpots as spot (spot.id)}
-						<SpotCard {spot} now={data.now} />
-					{/each}
-				</div>
-			</section>
-		{/if}
+		<section class="flex flex-col gap-3">
+			<h2 class="text-sm font-semibold tracking-wide text-foam/50 uppercase">
+				{activity === 'surf' ? 'Surf spots' : 'Dive spots'}
+			</h2>
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{#each activitySpots as spot (spot.id)}
+					<SpotCard {spot} now={data.now} />
+				{/each}
+			</div>
+		</section>
 	{/if}
 </div>

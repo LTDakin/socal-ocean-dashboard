@@ -65,6 +65,39 @@ export interface SpotOverview {
 	tide: { stationId: string; preview: TidePreviewPoint[] } | null;
 }
 
+/**
+ * Count the dashboard fields that carry a value (0-12). The list sorts by this
+ * so spots with real information lead and sparse or unobserved spots trail
+ * (`docs/frontend.md`). It is deliberately a presence count, not a quality
+ * judgement — a present-but-stale reading still counts.
+ */
+export function spotInfoScore(spot: SpotOverview): number {
+	const snapshot = spot.snapshot;
+	let score = 0;
+	for (const value of [
+		snapshot.waveHeightM,
+		snapshot.wavePeriodS,
+		snapshot.waveDirDeg,
+		snapshot.waterTempC,
+		snapshot.windSpeedMs,
+		snapshot.windDirDeg,
+		snapshot.waterLevelM,
+		snapshot.tideState,
+		snapshot.clarityRating
+	]) {
+		if (value !== null) score += 1;
+	}
+	if (spot.observedAt) score += 1;
+	if (spot.clarityObservedAt) score += 1;
+	if (spot.tide && spot.tide.preview.length > 0) score += 1;
+	return score;
+}
+
+/** Sort key: most information first, then alphabetical to break ties. */
+export function compareSpotsByInfo(a: SpotOverview, b: SpotOverview): number {
+	return spotInfoScore(b) - spotInfoScore(a) || a.name.localeCompare(b.name);
+}
+
 /** The preview window: the next `TIDE_PREVIEW_HOURS` from the next hour. */
 export function tidePreviewWindow(now: number = Date.now()): ForecastWindow {
 	const start = Math.ceil(now / HOUR_MS) * HOUR_MS;

@@ -7,6 +7,8 @@ import {
 	assembleSpotsOverview,
 	buildSpotOverview,
 	buildTidePreview,
+	compareSpotsByInfo,
+	spotInfoScore,
 	type SpotOverviewEntry
 } from './overview';
 import type { SourceRecord } from './types';
@@ -233,5 +235,53 @@ describe('assembleSpotsOverview', () => {
 		expect(overview.spots).toEqual([]);
 		expect(overview.sources).toEqual([]);
 		expect(overview.asOf).toBe('2026-10-11T00:00:00.000Z');
+	});
+});
+
+describe('spotInfoScore / compareSpotsByInfo', () => {
+	function overviewFor(
+		id: string,
+		parts: Pick<Parameters<typeof buildSpotOverview>[0], 'current' | 'clarity' | 'tides'>
+	) {
+		return buildSpotOverview({ spot: spotOrThrow(id), window: WINDOW, ...parts });
+	}
+
+	it('counts every populated snapshot field plus observations and tide preview', () => {
+		const full = overviewFor('la-jolla-shores', {
+			current: currentConditions(),
+			clarity: clarity(),
+			tides: coopsTides([tidePrediction('2026-10-11T00:00:00.000Z', 1.0)])
+		});
+		// 9 snapshot fields + observedAt + clarityObservedAt + tide preview.
+		expect(spotInfoScore(full)).toBe(12);
+
+		const empty = overviewFor('catalina-avalon', { current: null, clarity: null, tides: null });
+		expect(spotInfoScore(empty)).toBe(0);
+	});
+
+	it('ranks information-rich spots ahead of sparse ones, name as the tiebreak', () => {
+		const full = overviewFor('la-jolla-shores', {
+			current: currentConditions(),
+			clarity: clarity(),
+			tides: coopsTides([tidePrediction('2026-10-11T00:00:00.000Z', 1.0)])
+		});
+		const partial = overviewFor('huntington-beach', {
+			current: currentConditions(),
+			clarity: null,
+			tides: null
+		});
+		const empty = overviewFor('catalina-avalon', { current: null, clarity: null, tides: null });
+
+		const ranked = [empty, partial, full].sort(compareSpotsByInfo);
+		expect(ranked.map((spot) => spot.id)).toEqual([
+			'la-jolla-shores',
+			'huntington-beach',
+			'catalina-avalon'
+		]);
+
+		// Equal scores fall back to alphabetical order.
+		const laJollaCove = overviewFor('la-jolla-cove', { current: null, clarity: null, tides: null });
+		const tied = [laJollaCove, empty].sort(compareSpotsByInfo);
+		expect(tied.map((spot) => spot.id)).toEqual(['catalina-avalon', 'la-jolla-cove']);
 	});
 });

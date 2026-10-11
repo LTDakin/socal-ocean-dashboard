@@ -29,6 +29,8 @@ Reading order for a new agent:
 19. **`plan-perf-initial-load.md`** — the initial-load performance plan
     (cold-cache diagnosis; boot pre-warm, cycle-scoped GRIB field cache,
     single-flight dedup; streamed spot detail).
+20. **`plan-dashboard-activity-toggle.md`** — the dashboard surf/dive activity
+    toggle + information-first spot ordering.
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
