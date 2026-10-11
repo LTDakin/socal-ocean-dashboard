@@ -56,14 +56,14 @@
 </script>
 
 <article
-	class="flex flex-col gap-3 rounded-xl border border-sea/25 bg-deep/40 p-4 transition hover:border-surf/50 hover:bg-deep/60"
+	class="relative flex flex-col gap-3 rounded-xl border border-sea/25 bg-deep/40 p-4 transition hover:border-surf/50 hover:bg-deep/60"
 >
 	<header class="flex items-start justify-between gap-2">
 		<div class="min-w-0">
 			<h3 class="truncate text-base font-semibold text-foam">
 				<a
 					href={resolve('/spot/[id]', { id: spot.id })}
-					class="transition hover:text-surf focus-visible:text-surf"
+					class="transition after:absolute after:inset-0 hover:text-surf focus-visible:text-surf"
 				>
 					{spot.name}
 				</a>
@@ -79,7 +79,7 @@
 		</div>
 		<button
 			type="button"
-			class="-m-1 rounded-md p-1 text-lg leading-none transition hover:text-amber-200 {favorite
+			class="relative z-10 -m-1 rounded-md p-1 text-lg leading-none transition hover:text-amber-200 {favorite
 				? 'text-amber-300'
 				: 'text-foam/35'}"
 			aria-pressed={favorite}

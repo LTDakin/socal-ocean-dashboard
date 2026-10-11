@@ -60,7 +60,7 @@ busy public site makes only a handful of upstream calls per spot per day.
 ## Project structure (monorepo, pnpm workspaces)
 
 ```
-So-cal Ocean Dashboard/
+socal-ocean-dashboard/
   apps/
     web/              # SvelteKit app
       fixtures/       # small real NOMADS samples for golden tests

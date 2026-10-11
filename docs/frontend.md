@@ -33,7 +33,11 @@ cases (the `boat` type and the boat-only harbor spots were dropped).
 - `ClarityCard` — latest Kd490 → Secchi value + rating badge with "observed,
   not forecast" tag.
 - `SurfScoreStrip` — per-day derived score (0-10).
-- `ConditionsPanel` — "now" snapshot with per-field provenance.
+- `ConditionsPanel` — "now" snapshot with per-field provenance; each metric
+  (waves, water temp, wind, water level) carries a low→high `RangeMeter` and a
+  qualitative band so a bare number reads as "kinda high" / "low".
+- `RangeMeter` — CSS-only low→high scale with a value marker (no ECharts, like
+  `SurfScoreStrip`); scales live in `lib/components/scales.ts`.
 
 > Deferred: `SpotMap` (MapLibre) — clustered markers, condition-driven color
 > scale, popup → detail.
@@ -63,7 +67,9 @@ cases (the `boat` type and the boat-only harbor spots were dropped).
 - **Styling:** Tailwind with a small design-token layer (ocean palette, type
   scale). Dark-mode-first fits the dashboard aesthetic.
 - **Accessibility:** charts get table/alt fallbacks; color scales avoid
-  red/green-only encodings (colorblind-safe).
+  red/green-only encodings (colorblind-safe). The "now" panel's range meters keep
+  the number and the low/high end labels visible, so the colored position is
+  never the only cue.
 
 ## Verification
 

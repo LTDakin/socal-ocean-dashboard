@@ -31,6 +31,8 @@ Reading order for a new agent:
     single-flight dedup; streamed spot detail).
 20. **`plan-dashboard-activity-toggle.md`** — the dashboard surf/dive activity
     toggle + information-first spot ordering.
+21. **`plan-now-condition-scales.md`** — the "now" panel low→high range meters
+    (waves / water temp / wind / water level) + qualitative bands.
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
