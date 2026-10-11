@@ -1,0 +1,8 @@
+{
+	"table": {
+		"columnNames": ["time", "altitude", "latitude", "longitude", "kd_490"],
+		"columnTypes": ["String", "double", "double", "double", "float"],
+		"columnUnits": ["UTC", "m", "degrees_north", "degrees_east", "m^-1"],
+		"rows": [["2026-10-08T12:00:00Z", 0, 32.75625, -117.50625000000001, 0.03424]]
+	}
+}

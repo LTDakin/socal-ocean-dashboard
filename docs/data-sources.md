@@ -51,16 +51,81 @@ Each spot:
 }
 ```
 
-## Provider endpoints (confirm while building)
+## Provider endpoints (confirmed 2026-10-11)
 
-Values are filled in as each adapter is implemented — not a blocking gate.
-- **NOMADS:** Grib Filter URL template for `gfswave`, `dir=` path
-  (`.../wave/gridded`?), file naming (`gfswave.t00z.0p25.fFFF.grib2`, the
-  N. American 0.16° hourly domain coverage over CA), and forecast-hour stride
-  beyond +120h.
-- **CDIP:** IOOS ERDDAP dataset IDs for CA buoys (e.g., `edu_ucsd_cdip_<id>`),
-  and the route to MOP nearshore model output (netCDF via THREDDS, or CDIP's
-  experimental API).
-- **CoastWatch:** NRT VIIRS Kd490 griddap dataset ID covering CA, resolution,
-  latency, and missing-data behavior.
-- **CO-OPS:** station IDs; confirm no API token is needed for v1 calls.
+Verified live against each upstream. Frozen samples for every one are committed
+under [`apps/web/fixtures/`](../apps/web/fixtures/README.md) (with the exact
+queries used), so tests and dev never hit the live APIs.
+
+### NOMADS GFS-Wave (WW3)
+
+- **Grib Filter:** `https://nomads.ncep.noaa.gov/cgi-bin/filter_gfswave.pl`
+  - `dir=/gfs.YYYYMMDD/HH/wave/gridded` (e.g. `/gfs.20261011/00/wave/gridded`)
+  - `file=gfswave.tHHz.<domain>.<grid>.fFFF.grib2`
+  - Variables via `var_<ABBREV>=on`, levels via `lev_*`; **server-side
+    subregion needs `subregion=`** plus `toplat/bottomlat/leftlon/rightlon`.
+- **Direct files (for `.idx` Range fetches):**
+  `https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.YYYYMMDD/HH/wave/gridded/gfswave.tHHz.<domain>.<grid>.fFFF.grib2`
+  (+ a wgrib2-style `.idx` sidecar).
+- **Domains:** `global.0p25`, `global.0p16`, `wcoast.0p16`, `epacif.0p16`,
+  `atlocn.0p16`, `gsouth.0p25`, `arctic.9km`. **Use `wcoast.0p16` for SoCal**
+  (West Coast, 0.16°; coverage 25–50°N, 150–110°W).
+- **Forecast hours:** `f000–f120` hourly, then **3-hourly `f123–f384`** (16-day
+  horizon); 209 files per domain/cycle.
+- **Fields (wcoast):** `HTSGW, PERPW, DIRPW` (combined); `WVHGT, WVPER, WVDIR`
+  (wind-wave); `SWELL{1,2,3}, SWPER{1,2,3}, SWDIR{1,2,3}` (swell partition);
+  `WIND, WDIR, UGRD, VGRD`.
+- **Packing (for the codec):** full files use **Data Representation Template 40
+  (JPEG2000)**; Grib Filter subsets are re-packed to **template 0 (simple
+  packing)**. Both decode cleanly with `@mattnucc/gribberish`.
+- **Sanity check:** `00Z f000 HTSGW` at La Jolla = 0.95 m; nearby CDIP buoy 201
+  reported `waveHs` 0.75 m at 07Z — same regime.
+
+### CDIP (Scripps)
+
+- **Buoy obs (ERDDAP, tabledap):** `https://erddap.cdip.ucsd.edu/erddap/`
+  - Dataset `wave_agg` (also `sst_agg`, `cat4_agg`, `gps_agg`, `acm_agg`).
+    There are **no per-station `edu_ucsd_cdip_<id>` datasets** on this ERDDAP.
+  - Query:
+    `tabledap/wave_agg.json?time,waveHs,waveTp,waveDp&station_id="201"&time>=YYYY-MM-DDTHH:MM:SSZ`
+  - Station registry:
+    `tabledap/wave_agg.json?station_id,metaStationName,latitude,longitude&distinct()`
+  - Confirmed SoCal stations: **`073`** Scripps Pier, **`201`** Scripps
+    Nearshore, **`100`** Torrey Pines Outer (full list in the fixture).
+- **Nearshore MOP model (THREDDS):**
+  `https://thredds.cdip.ucsd.edu/thredds/dodsC/cdip/model/MOP_grids/CA_0.01_nowcast.nc`
+  — 0.01° CA grid, vars `waveHs, waveTp, waveTa, waveDp` (with `CA_0.01_forecast.nc`
+  and `*_seaswellfc.nc` for the forecast horizon; NCSS subsetting at
+  `/thredds/ncss/grid/…` and `/thredds/ncss/point/…`).
+
+### NOAA CoastWatch (VIIRS Kd490)
+
+- **ERDDAP:** `https://coastwatch.pfeg.noaa.gov/erddap/`
+- **Dataset:** `nesdisVHNkd490Daily` — VIIRS (S-NPP) NRT Kd490, global 4 km
+  (0.0375°), Level-3 daily, 2017–present. (Lon0360 variant:
+  `nesdisVHNkd490DailyLon0360`.)
+- **Subset:** `griddap/nesdisVHNkd490Daily.json?kd_490[(DATE)][(0.0)][(lat)][(lon)]`
+  — variable `kd_490` (m⁻¹).
+- **Latency:** observed ~2–3 days behind (aggregation max `2026-10-08T12:00Z`
+  on 2026-10-11). Cloud gaps → missing/NaN values.
+- Example: La Jolla 2026-10-08 = 0.03424 m⁻¹ → Secchi ≈ 42 m.
+
+### NOAA CO-OPS
+
+- **Data API:** `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter`
+- **Metadata API:** `https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json`
+- **No token required** for v1 calls (verified for predictions and
+  water_temperature). `date=today|recent|latest`; arbitrary dates are rejected.
+- **Station IDs (tide predictions + water level):** `9410230` La Jolla (Scripps
+  Wharf); `9410170` San Diego (Broadway); `9410196` Mission Bay; `9410580`
+  Newport Bay Entrance / Corona del Mar; `9410583` Balboa Pier; `9410660` LA
+  Outer Harbor; `9410680` Long Beach (Terminal Island); `9410840` Santa Monica
+  Pier; `9411065` Port Hueneme; `9411189` Ventura; `9411340` Santa Barbara;
+  `9412110` Port San Luis.
+- **Currents:** `product=currents` exists but uses a separate current-station ID
+  space; link per spot when the observations adapter is built.
+
+### NDBC
+
+- To confirm when the observations adapter is built (plain-text `realtime2`
+  files + ERDDAP mirrors).
