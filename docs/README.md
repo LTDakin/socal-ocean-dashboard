@@ -26,6 +26,9 @@ Reading order for a new agent:
     provenance footer; wires `surfScore`/`bestTimeWindow` into `daily[]`).
 18. **`plan-m4-attribution.md`** — the attribution / safety-disclaimer plan
     (shared `lib/attribution` credits + the `/about` methodology page).
+19. **`plan-perf-initial-load.md`** — the initial-load performance plan
+    (cold-cache diagnosis; boot pre-warm, cycle-scoped GRIB field cache,
+    single-flight dedup; streamed spot detail).
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,

@@ -85,8 +85,19 @@ So-cal Ocean Dashboard/
   tides ~6h, clarity ~24h.
 - **Stale-if-error:** on upstream failure, serve the last successful payload
   with `stale: true` and `asOf` metadata rather than erroring.
-- **Pre-warm:** a cron refreshes the N most popular spots each cycle so first
-  visits are instant.
+- **GRIB fields cache for the model cycle:** decoded GFS-Wave fields for a given
+  (cycle, hour) are immutable, so the source caches them for the whole cycle
+  (~8 h) rather than the adapter's 1 h freshness TTL — which still gates
+  forecast freshness. Without this the 14-day fan-out (~188 subsets) re-ran on
+  every hourly expiry.
+- **Single-flight:** concurrent identical cache misses share one upstream fetch
+  (`lib/async/single-flight.ts`), so a dashboard load, a detail load and the
+  pre-warm racing each other don't each open a connection.
+- **Pre-warm:** at boot (`hooks.server.ts` → `init`) the process warms the
+  `/api/spots` overview for every spot, then one forecast (which fills the shared
+  GRIB field cache, making every other detail load cheap). On by default in
+  production; opt in during dev with `PREWARM=1` (force off with `PREWARM=0`).
+  See [`plan-perf-initial-load.md`](plan-perf-initial-load.md).
 - **Health:** a `/api/health` endpoint reports per-provider last-good time and
   cache hit rate.
 

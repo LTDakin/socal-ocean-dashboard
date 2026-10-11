@@ -42,6 +42,10 @@ spots* and *dive spots*; the seed list (`lib/spots/spots.json`), the spot model
 - **Data access:** page `+page.server.ts` loaders call the backend endpoints
   from `api-contracts.md`; client components receive typed data. Client-side
   refresh (polling) only where freshness matters (current conditions).
+- **Streaming:** the spot detail loader returns the slow 14-day forecast as an
+  unawaited promise, so the shell, conditions panel, tide curve and clarity card
+  render as soon as the fast endpoints answer and the forecast sections fill in
+  via `{#await}` (`plan-perf-initial-load.md`).
 - **State:** Svelte 5 runes; a `spots` store for shared spot list/favorites;
   favorites in `localStorage`.
 - **Units & formatting:** a `lib/format` module owns all conversion/formatting

@@ -9,6 +9,7 @@
  * Decoding lives in `lib/grib2`; this file never touches GRIB2 bytes directly.
  * Derived daily extremes come from `lib/derive`. All values are SI.
  */
+import { createSingleFlight } from '../async/single-flight';
 import { TtlCache } from '../cache';
 import {
 	aggregateDaily,
@@ -44,6 +45,17 @@ export const GFSWAVE_PROVIDER_ID = 'gfswave';
 /** Fresh for the model's ~1 h cadence, servable stale for 6 h on upstream error. */
 export const GFSWAVE_TTL_MS = HOUR_MS;
 export const GFSWAVE_STALE_TTL_MS = 6 * HOUR_MS;
+
+/**
+ * How long the decoded fields for a given (cycle, hour) stay cached.
+ *
+ * A GRIB field set for a model cycle never changes, and a cycle stays current
+ * for ~6 h (`MODEL_RUN_INTERVAL_HOURS`). Caching fields for the whole cycle (with
+ * margin) means the expensive subset fan-out runs once per cycle instead of
+ * re-running on every hourly adapter expiry — the adapter's own 1 h TTL still
+ * controls forecast freshness.
+ */
+export const GFSWAVE_FIELD_CACHE_TTL_MS = 8 * HOUR_MS;
 
 /**
  * West-Coast region box (signed degrees) covering every seed spot's offshore
@@ -180,7 +192,8 @@ export function createNomadsSource(options: NomadsSourceOptions = {}): GfsWaveSo
 	const region = options.region ?? SO_CAL_REGION;
 	const variables = options.variables ?? GFSWAVE_VARIABLES;
 	const cache = options.cache ?? new TtlCache();
-	const cacheTtlMs = options.cacheTtlMs ?? GFSWAVE_TTL_MS;
+	const cacheTtlMs = options.cacheTtlMs ?? GFSWAVE_FIELD_CACHE_TTL_MS;
+	const singleFlight = createSingleFlight();
 	const deps: FetchDeps = {};
 	if (options.fetchImpl) deps.fetchImpl = options.fetchImpl;
 	if (options.signal) deps.signal = options.signal;
@@ -191,12 +204,19 @@ export function createNomadsSource(options: NomadsSourceOptions = {}): GfsWaveSo
 			const key = `${GFSWAVE_PROVIDER_ID}:region:${cycle.toISOString()}:${hour}:${bounds}`;
 			const cached = cache.get<GribField[]>(key);
 			if (cached) return cached;
-			const fields = await fetchSubsetFields(
-				{ cycle, forecastHour: hour, variables, domain: options.domain, subregion: region },
-				deps
-			);
-			cache.set(key, fields, cacheTtlMs, 0);
-			return fields;
+
+			// Fields are shared across spots: if two forecasts for the same cycle
+			// are in flight, they must not each fetch the same subset.
+			return singleFlight(key, async () => {
+				const again = cache.get<GribField[]>(key);
+				if (again) return again;
+				const fields = await fetchSubsetFields(
+					{ cycle, forecastHour: hour, variables, domain: options.domain, subregion: region },
+					deps
+				);
+				cache.set(key, fields, cacheTtlMs, 0);
+				return fields;
+			});
 		}
 	};
 }

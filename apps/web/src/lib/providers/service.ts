@@ -5,7 +5,8 @@
  * (`docs/api-contracts.md`). Adapters stay dumb: they fetch and throw. This
  * layer decides fresh-vs-stale and builds provenance.
  */
-import { TtlCache } from '../cache';
+import { createSingleFlight } from '../async/single-flight';
+import { TtlCache, type CacheRead } from '../cache';
 import type { Spot } from '../spots';
 import {
 	cacheKey,
@@ -48,6 +49,7 @@ export class SpotDataService {
 	private readonly adapters: ProviderAdapter[];
 	private readonly cache: TtlCache;
 	private readonly now: () => number;
+	private readonly singleFlight = createSingleFlight();
 
 	constructor(options: SpotDataServiceOptions) {
 		this.adapters = options.adapters;
@@ -104,7 +106,7 @@ export class SpotDataService {
 		return selected;
 	}
 
-	private async load(
+	private load(
 		adapter: ProviderAdapter,
 		spot: Spot,
 		window: ForecastWindow,
@@ -114,15 +116,25 @@ export class SpotDataService {
 
 		if (!options.forceRefresh) {
 			const hit = this.cache.read<ProviderPayload<unknown>>(key);
-			if (hit?.fresh) {
-				return {
-					provider: adapter.id,
-					payload: hit.value,
-					stale: false,
-					fromCache: true,
-					fetchedAt: hit.storedAt
-				};
-			}
+			if (hit?.fresh) return Promise.resolve(freshHit(adapter.id, hit));
+		}
+
+		// Collapse concurrent cache misses for the same key into one upstream
+		// fetch (dashboard + detail + pre-warm can all request it at once).
+		return this.singleFlight(key, () => this.loadUncached(adapter, spot, window, key, options));
+	}
+
+	private async loadUncached(
+		adapter: ProviderAdapter,
+		spot: Spot,
+		window: ForecastWindow,
+		key: string,
+		options: { signal?: AbortSignal; forceRefresh: boolean }
+	): Promise<LoadedSource> {
+		// A queued caller may have filled the cache before we started.
+		if (!options.forceRefresh) {
+			const hit = this.cache.read<ProviderPayload<unknown>>(key);
+			if (hit?.fresh) return freshHit(adapter.id, hit);
 		}
 
 		try {
@@ -146,6 +158,11 @@ export class SpotDataService {
 			throw new ProviderError(`${adapter.id} failed`, { retryable: true, cause });
 		}
 	}
+}
+
+/** A fresh cache hit, shaped as a loaded source. */
+function freshHit(provider: string, hit: CacheRead<ProviderPayload<unknown>>): LoadedSource {
+	return { provider, payload: hit.value, stale: false, fromCache: true, fetchedAt: hit.storedAt };
 }
 
 /** Newest source `asOf`; falls back to epoch 0 never happens (success needs ≥1). */

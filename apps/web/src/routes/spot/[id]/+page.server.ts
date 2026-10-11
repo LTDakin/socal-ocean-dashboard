@@ -6,6 +6,7 @@ import type {
 	TidesEnvelope
 } from '../../../lib/providers';
 import { buildTidePreview } from '../../../lib/providers/overview';
+import { mergeSourceRecords } from '../../../lib/providers/sources';
 import { getSpot } from '../../../lib/spots';
 import type { PageServerLoad } from './$types';
 
@@ -27,12 +28,17 @@ async function loadJson<T>(fetchImpl: typeof globalThis.fetch, url: string): Pro
 
 /**
  * The spot detail loader (`docs/frontend.md`): resolve the spot, then call the
- * four per-spot endpoints (`/forecast`, `/tides`, `/current`, `/clarity`) in
- * parallel. Each result degrades independently to `{ data: null, error }`, so a
- * single down provider blanks its own card rather than the whole page.
+ * four per-spot endpoints. The forecast is the slow one (hundreds of GRIB
+ * subsets on a cold cache), so it is returned **unawaited** and SvelteKit streams
+ * it: the shell, conditions panel, tide curve and clarity card render as soon as
+ * the three cheaper endpoints answer, and the forecast sections fill in when it
+ * resolves. `provenance` resolves off the same promise so the footer still
+ * merges every source.
  *
- * The tide curve is decimated here with the tested `buildTidePreview` (3 h step
- * over the 14-day window) so the page hands the chart a compact series.
+ * Each result degrades independently to `{ data: null, error }`, so a single
+ * down provider blanks its own card rather than the whole page. The tide curve is
+ * decimated here with the tested `buildTidePreview` (3 h step over the 14-day
+ * window) so the page hands the chart a compact series.
  */
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const spot = getSpot(params.id);
@@ -40,8 +46,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
 	const now = Date.now();
 	const base = `/api/spot/${encodeURIComponent(spot.id)}`;
-	const [forecast, tides, current, clarity] = await Promise.all([
-		loadJson<ForecastEnvelope>(fetch, `${base}/forecast`),
+
+	// Deliberately not awaited — streamed to the client (see the doc comment).
+	const forecast = loadJson<ForecastEnvelope>(fetch, `${base}/forecast`);
+
+	const [tides, current, clarity] = await Promise.all([
 		loadJson<TidesEnvelope>(fetch, `${base}/tides`),
 		loadJson<CurrentEnvelope>(fetch, `${base}/current`),
 		loadJson<ClarityEnvelope>(fetch, `${base}/clarity`)
@@ -50,5 +59,20 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const coops = tides.data?.data.coops ?? null;
 	const tidePoints = coops ? buildTidePreview(coops.predictions, coops.window, 3) : [];
 
-	return { spot, now, forecast, tides, current, clarity, tidePoints };
+	// Merged provenance + staleness, once the streamed forecast settles.
+	const provenance = forecast.then((forecastResult) => {
+		const sources = mergeSourceRecords([
+			...(forecastResult.data?.sources ?? []),
+			...(tides.data?.sources ?? []),
+			...(current.data?.sources ?? []),
+			...(clarity.data?.sources ?? [])
+		]);
+		return {
+			sources,
+			stale: sources.some((source) => source.stale),
+			generatedAt: forecastResult.data?.data.gfswave?.generatedAt ?? null
+		};
+	});
+
+	return { spot, now, forecast, provenance, tides, current, clarity, tidePoints };
 };

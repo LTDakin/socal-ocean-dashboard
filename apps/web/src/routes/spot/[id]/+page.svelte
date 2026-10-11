@@ -7,7 +7,6 @@
 	import TideChart from '../../../lib/components/TideChart.svelte';
 	import WaveForecastChart from '../../../lib/components/WaveForecastChart.svelte';
 	import { formatRelativeTime, regionLabel } from '../../../lib/format';
-	import { mergeSourceRecords } from '../../../lib/providers/sources';
 	import { favorites } from '../../../lib/stores/favorites.svelte';
 	import { preferences } from '../../../lib/stores/preferences.svelte';
 	import type { PageProps } from './$types';
@@ -19,20 +18,9 @@
 	const units = $derived(preferences.units);
 	const favorite = $derived(favorites.has(spot.id));
 
-	const gfswave = $derived(data.forecast.data?.data.gfswave ?? null);
 	const current = $derived(data.current.data?.data.current ?? null);
 	const clarity = $derived(data.clarity.data?.data.clarity ?? null);
 	const tidePoints = $derived(data.tidePoints);
-
-	const sources = $derived(
-		mergeSourceRecords([
-			...(data.forecast.data?.sources ?? []),
-			...(data.tides.data?.sources ?? []),
-			...(data.current.data?.sources ?? []),
-			...(data.clarity.data?.sources ?? [])
-		])
-	);
-	const stale = $derived(sources.some((source) => source.stale));
 
 	const section = 'rounded-xl border border-sea/25 bg-deep/40 p-4';
 	const heading = 'text-sm font-semibold tracking-wide text-foam/50 uppercase';
@@ -74,49 +62,66 @@
 		</div>
 	</div>
 
-	{#if stale}
-		<p
-			class="rounded-md border border-amber-300/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
-		>
-			Some conditions are stale — showing the last good values while the upstream recovers.
-		</p>
-	{/if}
+	{#await data.provenance then provenance}
+		{#if provenance.stale}
+			<p
+				class="rounded-md border border-amber-300/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
+			>
+				Some conditions are stale — showing the last good values while the upstream recovers.
+			</p>
+		{/if}
+	{/await}
 
 	<ConditionsPanel {current} {now} {units} />
 
-	{#if gfswave}
-		<SurfScoreStrip daily={gfswave.daily} {now} />
-	{:else}
+	{#await data.forecast}
 		<section class={section}>
 			<h2 class={heading}>Surf score</h2>
-			<p class="mt-2 text-sm text-foam/50">
-				No surf score available{data.forecast.error ? ` (${data.forecast.error})` : ''}.
-			</p>
+			<p class="mt-2 text-sm text-foam/50">Loading forecast…</p>
 		</section>
-	{/if}
+	{:then forecast}
+		{@const gfswave = forecast.data?.data.gfswave ?? null}
+		{#if gfswave}
+			<SurfScoreStrip daily={gfswave.daily} {now} />
+		{:else}
+			<section class={section}>
+				<h2 class={heading}>Surf score</h2>
+				<p class="mt-2 text-sm text-foam/50">
+					No surf score available{forecast.error ? ` (${forecast.error})` : ''}.
+				</p>
+			</section>
+		{/if}
+	{/await}
 
 	<section class={section}>
 		<header class="flex flex-wrap items-baseline justify-between gap-2">
 			<h2 class={heading}>Wave &amp; swell forecast</h2>
-			{#if gfswave}
-				<p class="text-xs text-foam/40">
-					Model run {formatRelativeTime(gfswave.modelRun, now)}
+			{#await data.forecast then forecast}
+				{#if forecast.data?.data.gfswave}
+					<p class="text-xs text-foam/40">
+						Model run {formatRelativeTime(forecast.data.data.gfswave.modelRun, now)}
+					</p>
+				{/if}
+			{/await}
+		</header>
+		{#await data.forecast}
+			<p class="mt-3 text-sm text-foam/50">Loading forecast…</p>
+		{:then forecast}
+			{@const gfswave = forecast.data?.data.gfswave ?? null}
+			{#if gfswave && gfswave.daily.length > 0}
+				<div class="mt-3">
+					<WaveForecastChart daily={gfswave.daily} {units} />
+				</div>
+				<p class="mt-2 text-[11px] text-foam/40">
+					Daily maxima at the spot's offshore model point. Bar heights: significant wave &amp; swell
+					height; line: dominant period.
+				</p>
+			{:else}
+				<p class="mt-3 text-sm text-foam/50">
+					Forecast unavailable{forecast.error ? ` (${forecast.error})` : ''}.
 				</p>
 			{/if}
-		</header>
-		{#if gfswave && gfswave.daily.length > 0}
-			<div class="mt-3">
-				<WaveForecastChart daily={gfswave.daily} {units} />
-			</div>
-			<p class="mt-2 text-[11px] text-foam/40">
-				Daily maxima at the spot's offshore model point. Bar heights: significant wave &amp; swell
-				height; line: dominant period.
-			</p>
-		{:else}
-			<p class="mt-3 text-sm text-foam/50">
-				Forecast unavailable{data.forecast.error ? ` (${data.forecast.error})` : ''}.
-			</p>
-		{/if}
+		{/await}
 	</section>
 
 	<section class={section}>
@@ -142,5 +147,7 @@
 
 	<ClarityCard {clarity} {now} {units} />
 
-	<ProvenanceFooter {sources} generatedAt={gfswave?.generatedAt ?? null} {now} />
+	{#await data.provenance then provenance}
+		<ProvenanceFooter sources={provenance.sources} generatedAt={provenance.generatedAt} {now} />
+	{/await}
 </div>
