@@ -3,8 +3,15 @@
 SvelteKit (Svelte 5, runes) + TypeScript + Tailwind. ECharts for all charting.
 The MapLibre map (free vector tiles, e.g. Protomaps or OpenFreeMap/Stadia) is
 deferred to post-MVP. Data is in SI internally; units shown to users follow
-audience convention (surfers/boaters think in feet; keep metric accents like
-°C optional via a settings toggle).
+audience convention (surfers think in feet; keep metric accents like °C optional
+via a settings toggle).
+
+## Scope
+
+**Surf and dive only — no boating.** The dashboard's top level is *best surf
+spots* and *dive spots*; the seed list (`lib/spots/spots.json`), the spot model
+(`data-sources.md`), and every derived metric are scoped to those two use cases
+(the `boat` type and the boat-only harbor spots were dropped).
 
 ## Pages
 
@@ -51,5 +58,5 @@ audience convention (surfers/boaters think in feet; keep metric accents like
 
 ## Verification
 
-- Manual QA at M4: verify each spot type (surf/dive/boat) reads sensibly against
+- Manual QA at M4: verify each spot type (surf/dive) reads sensibly against
   fixtures.

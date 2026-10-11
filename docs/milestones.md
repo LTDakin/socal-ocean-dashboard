@@ -11,7 +11,7 @@ data-audit gate and no library-hardening milestone. Each milestone has a
 ## M0 — Scaffold, spots & BFF core
 - [x] pnpm workspaces monorepo (`apps/web`); SvelteKit 3 + Tailwind v4; TS
   strict; lint/format/test/type-check wired; CI runs on Node LTS.
-- [x] Seed spot list (~10–20 spots, mixed surf/dive/boat) in
+- [x] Seed spot list (~10–20 surf/dive spots) in
   `apps/web/src/lib/spots/`, with station IDs filled in from `data-sources.md`.
 - [x] Provider adapter interface + TTL cache foundation (the
   `getSpotData(spot, window) -> normalized bundle` seam, the
@@ -74,13 +74,14 @@ observed clarity + rating + `asOf`.
 
 ## M4 — Frontend
 - [ ] App shell, routing, Tailwind tokens, spots store + favorites, dashboard
-  spot cards, ECharts wrapper, chart empty/loading/stale states.
+  spot cards (best surf spots / dive spots), ECharts wrapper, chart
+  empty/loading/stale states.
 - [ ] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
   condition panel, provenance footer.
 - [ ] Attribution + safety disclaimers in the app footer (minimal about page).
 
 **DoD:** `/` lists spots with current snapshots; spot detail works for one spot
-of each type (surf/dive/boat); attribution and disclaimers are visible.
+of each type (surf/dive); attribution and disclaimers are visible.
 **Verify:** manual QA against fixtures.
 
 ---

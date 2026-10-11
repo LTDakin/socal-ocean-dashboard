@@ -30,7 +30,7 @@ Reading order for a new agent:
 - [x] Tech plan written
 - [x] Owner sign-off ("Ready to Code")
 - [x] M0a: monorepo scaffold & developer tooling (`pnpm lint/check/test/build` green)
-- [x] Seed spot list (19 SoCal spots, station IDs filled in)
+- [x] Seed spot list (16 SoCal surf/dive spots, station IDs filled in)
 - [x] Provider adapter/cache foundation
 - [x] M1: GRIB2 decode seam (`lib/grib2`; fixtures decode to the cross-checked values)
 - [x] M2a: GFS-Wave adapter + `GET /api/spot/[id]/forecast` (live-verified)

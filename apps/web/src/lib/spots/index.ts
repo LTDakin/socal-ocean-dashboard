@@ -1,7 +1,7 @@
 import spotsData from './spots.json';
 
 /** The ocean use cases a spot supports. */
-export type SpotType = 'surf' | 'dive' | 'boat';
+export type SpotType = 'surf' | 'dive';
 
 /** A deep-water model sample point for the offshore wave forecast. */
 export interface ModelPoint {

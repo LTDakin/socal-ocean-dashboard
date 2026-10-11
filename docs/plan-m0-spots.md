@@ -3,7 +3,8 @@
 **Priority item:** `todo-list.md` → Priority 0, second bullet ("Curate the seed
 spot list"). Maps to `milestones.md` **M0** (spots half).
 
-**Status:** ✅ implemented — 19 spots seeded; `pnpm --filter web test/lint/check`
+**Status:** ✅ implemented — 16 surf/dive spots seeded (the list was trimmed from
+19 when the boating use case was dropped); `pnpm --filter web test/lint/check`
 green.
 
 ## Problem
@@ -20,7 +21,7 @@ against.
 > the seed JSON exists with station IDs filled in.
 
 Concretely: a seed file in `apps/web/src/lib/spots/` with ~10–20 SoCal spots
-covering surf / dive / boat, each with the `data-sources.md` spot model fully
+covering surf / dive, each with the `data-sources.md` spot model fully
 populated (offshore model point, CDIP buoy, CO-OPS station, exposure), plus a
 typed accessor and a cheap validation test so a bad edit fails CI rather than
 surfacing as a blank chart.
@@ -56,7 +57,7 @@ apps/web/src/lib/spots/
   "tests gate merges" rule without pretending to be a data audit).
 - No UI, no `/api/spots` route, no providers — those are later todos.
 
-## Seed list (19 spots)
+## Seed list (16 surf/dive spots)
 
 Coordinates are approximate anchors to be refined when a spot is first exercised
 end to end. CDIP buoy IDs come from the real
@@ -73,18 +74,15 @@ of the open-ocean direction the spot faces (the azimuth of the swell it favors).
 | `huntington-beach` | Huntington Beach Pier | orange | surf | 33.63, -118.08 | 172 | 9410580 |
 | `newport-wedge` | Newport Beach (The Wedge) | orange | surf | 33.59, -117.98 | 172 | 9410580 |
 | `salt-creek` | Salt Creek (Dana Point) | orange | surf, dive | 33.46, -117.82 | 284 | 9410580 |
-| `dana-point-harbor` | Dana Point Harbor | orange | boat | 33.44, -117.78 | 284 | 9410580 |
 | `malibu-surfrider` | Malibu (Surfrider Beach) | los-angeles | surf | 34.03, -118.79 | 105 | 9410840 |
 | `el-porto` | El Porto (Manhattan Beach) | los-angeles | surf | 33.89, -118.53 | 125 | 9410777 |
 | `palos-verdes` | Palos Verdes (Lunada Bay) | los-angeles | surf, dive | 33.74, -118.58 | 213 | 9410738 |
-| `long-beach` | Long Beach (Alamitos Bay) | los-angeles | boat | 33.68, -118.25 | 215 | 9410680 |
-| `san-pedro` | San Pedro (Point Fermin) | los-angeles | dive, boat | 33.67, -118.42 | 092 | 9410660 |
+| `san-pedro` | San Pedro (Point Fermin) | los-angeles | dive | 33.67, -118.42 | 092 | 9410660 |
 | `ventura-c-street` | Ventura (C Street) | ventura | surf | 34.27, -119.43 | 169 | 9411189 |
 | `rincon` | Rincon Point | ventura | surf | 34.34, -119.56 | 131 | 9411270 |
-| `port-hueneme` | Port Hueneme / Oxnard | ventura | boat | 34.12, -119.30 | 141 | 9411065 |
-| `anacapa-island` | Anacapa Island | channel-islands | dive, boat | 33.99, -119.43 | 212 | 9410971 |
-| `catalina-avalon` | Avalon, Catalina Island | channel-islands | dive, boat | 33.32, -118.42 | — | 9410079 |
-| `santa-barbara` | Santa Barbara (Leadbetter) | santa-barbara | surf, boat | 34.39, -119.80 | 090 | 9411340 |
+| `anacapa-island` | Anacapa Island | channel-islands | dive | 33.99, -119.43 | 212 | 9410971 |
+| `catalina-avalon` | Avalon, Catalina Island | channel-islands | dive | 33.32, -118.42 | — | 9410079 |
+| `santa-barbara` | Santa Barbara (Leadbetter) | santa-barbara | surf | 34.39, -119.80 | 090 | 9411340 |
 
 Notes:
 - `catalina-avalon` has no dedicated CDIP buoy; it is left null rather than
@@ -92,14 +90,18 @@ Notes:
   NDBC or mainland buoys later).
 - `favoriteSeed: true` on a handful (La Jolla Shores, Huntington, Malibu,
   Santa Barbara, Catalina) so the dashboard has sensible defaults.
-- Types cover all three use cases: surf, dive, boat.
+- Types cover both use cases: surf, dive.
+- Three boat-only harbor spots (`dana-point-harbor`, `long-beach`,
+  `port-hueneme`) and the `boat` type were removed when boating left the product
+  scope (see `frontend.md` → Scope); `san-pedro`, `anacapa-island`,
+  `catalina-avalon`, and `santa-barbara` kept their surf/dive type.
 
 ## Validation test (`spots.spec.ts`)
 
 Cheap structural checks only (not a data audit):
 1. 10–20 spots; `id` unique and URL-safe.
 2. every spot has 2–4 fixed-precision coords inside a broad SoCal bbox.
-3. `types` non-empty and drawn from `surf | dive | boat`.
+3. `types` non-empty and drawn from `surf | dive`.
 4. every spot has a non-empty `offshoreModelPoint`.
 5. `cdipBuoyId` (when present) is a 3-digit string; `coopsStationId` matches
    `/^941\d{4}$/`; `exposureDeg` (when present) is 0–359.
@@ -121,11 +123,16 @@ Cheap structural checks only (not a data audit):
 
 ## Outcome
 
-Shipped as planned: `spots.json` (19 spots), `index.ts` (`Spot`/`SpotType` +
-`loadSpots()`/`getSpot()`), and `spots.spec.ts`. `resolveJsonModule` was enabled
-in `apps/web/tsconfig.json` so the seed can be imported as typed JSON. The
-`.gitkeep` placeholder was removed. Minor deviation: the lookup is named
-`getSpot()` rather than `byId()`.
+Shipped as planned: `spots.json` (now 16 surf/dive spots), `index.ts`
+(`Spot`/`SpotType` + `loadSpots()`/`getSpot()`), and `spots.spec.ts`.
+`resolveJsonModule` was enabled in `apps/web/tsconfig.json` so the seed can be
+imported as typed JSON. The `.gitkeep` placeholder was removed. Minor deviation:
+the lookup is named `getSpot()` rather than `byId()`.
+
+**Later scope change:** boating left the product scope, so the seed was trimmed
+from 19 to 16 spots — the three boat-only harbors were dropped, the `boat` type
+was removed from the union, and the mixed spots kept their surf/dive types. The
+plan above is kept in its original shape with this note rather than rewritten.
 
 **Verification run (all green):** `pnpm --filter web test` ✅ (7 tests) ·
 `pnpm --filter web check` ✅ (0 errors, 0 warnings) · `pnpm --filter web lint`

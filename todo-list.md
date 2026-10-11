@@ -19,10 +19,10 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   dropped at M0 in favour of `@mattnucc/gribberish`. ✅
 
 - [x] **Curate the seed spot list.**
-  ~10–20 SoCal spots spanning surf/dive/boat with the spot model from
+  ~10–20 SoCal spots spanning surf/dive with the spot model from
   `data-sources.md` (offshore model point, buoy/station linkage, exposure).
   *Done when:* the seed JSON exists with station IDs filled in. ✅
-  (19 spots in `apps/web/src/lib/spots/spots.json`.)
+  (16 spots in `apps/web/src/lib/spots/spots.json`.)
 
 - [x] **Build the provider adapter interface + cache foundation (BFF core).**
   The shared `getSpotData(spot, window) -> normalized bundle` contract, the TTL
@@ -87,15 +87,15 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 - [ ] **Build the app shell + dashboard.**
   Routing, Tailwind tokens, spots store + local favorites, dashboard `SpotCard`
-  list, shared ECharts wrapper, and empty/loading/stale states. Top level should be
-  best surf spots, dive spots. Data cards with vis, swell, tide chart, dense data for experienced surfers and divers to quickly understand with a glance. no boating needed: update scope to remove boating from
-  other mds. 
+  list, shared ECharts wrapper, and empty/loading/stale states. Top level: best
+  surf spots, then dive spots. Data cards with visibility, swell, and tide chart —
+  dense data an experienced surfer or diver can read at a glance.
   *Done when:* `/` lists spots with current snapshots.
 
 - [ ] **Build the spot detail experience.**
   Wave/swell chart, tide curve, clarity card, surf-score strip, conditions panel,
   and the provenance footer — one spot of each type.
-  *Done when:* detail works for surf/dive/boat spots.
+  *Done when:* detail works for surf/dive spots.
 
 - [ ] **Add attribution + disclaimers.**
   Data credits per `data-sources.md` and safety disclaimers, surfaced in the app

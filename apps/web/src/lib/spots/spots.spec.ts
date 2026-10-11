@@ -7,7 +7,7 @@ import { getSpot, loadSpots, spots, type SpotType } from './index';
  * without pretending to be a data audit against the upstream stations.
  */
 const SO_CAL_BBOX = { minLat: 32.0, maxLat: 35.0, minLon: -121.0, maxLon: -116.0 };
-const KNOWN_TYPES: SpotType[] = ['surf', 'dive', 'boat'];
+const KNOWN_TYPES: SpotType[] = ['surf', 'dive'];
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const COOPS_RE = /^941\d{4}$/;
 const CDIP_RE = /^\d{3}$/;
@@ -43,7 +43,7 @@ describe('spots seed list', () => {
 		}
 	});
 
-	it('gives every spot a known type and spans all three use cases', () => {
+	it('gives every spot a known type and spans both use cases', () => {
 		const seen = new Set<SpotType>();
 		for (const s of spots) {
 			expect(s.types.length, `${s.id} has no type`).toBeGreaterThan(0);

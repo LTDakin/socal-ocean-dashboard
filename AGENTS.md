@@ -5,7 +5,7 @@ Project-level instructions for any agent (or human) working in this repo.
 ## Project summary
 
 - **Product:** an ocean-conditions dashboard for Southern California
-  (surfers / divers / boaters). Real-time conditions + daily forecast out to
+  (surfers / divers). Real-time conditions + daily forecast out to
   ~14 days: waves, swell, tides, currents, water temperature, and
   satellite-derived water clarity/visibility.
 - **Decisions already made (do not relitigate without a strong reason):**

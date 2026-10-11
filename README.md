@@ -1,8 +1,8 @@
 # So-cal Ocean Dashboard
 
 A data dashboard for monitoring ocean conditions along the Southern California
-coast — waves, tides, currents, and underwater clarity — aimed at surfers,
-divers, and boaters.
+coast — waves, tides, currents, and underwater clarity — aimed at surfers and
+divers.
 
 ## Status: PLANNING
 

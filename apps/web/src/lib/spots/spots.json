@@ -86,18 +86,6 @@
 		"exposureDeg": 200
 	},
 	{
-		"id": "dana-point-harbor",
-		"name": "Dana Point Harbor",
-		"region": "orange",
-		"lat": 33.459,
-		"lon": -117.693,
-		"types": ["boat"],
-		"offshoreModelPoint": { "lat": 33.44, "lon": -117.78 },
-		"cdipBuoyId": "284",
-		"coopsStationId": "9410580",
-		"exposureDeg": 190
-	},
-	{
 		"id": "malibu-surfrider",
 		"name": "Malibu (Surfrider Beach)",
 		"region": "los-angeles",
@@ -135,24 +123,12 @@
 		"exposureDeg": 245
 	},
 	{
-		"id": "long-beach",
-		"name": "Long Beach (Alamitos Bay)",
-		"region": "los-angeles",
-		"lat": 33.76,
-		"lon": -118.118,
-		"types": ["boat"],
-		"offshoreModelPoint": { "lat": 33.68, "lon": -118.25 },
-		"cdipBuoyId": "215",
-		"coopsStationId": "9410680",
-		"exposureDeg": 190
-	},
-	{
 		"id": "san-pedro",
 		"name": "San Pedro (Point Fermin)",
 		"region": "los-angeles",
 		"lat": 33.705,
 		"lon": -118.293,
-		"types": ["dive", "boat"],
+		"types": ["dive"],
 		"offshoreModelPoint": { "lat": 33.67, "lon": -118.42 },
 		"cdipBuoyId": "092",
 		"coopsStationId": "9410660",
@@ -183,24 +159,12 @@
 		"exposureDeg": 200
 	},
 	{
-		"id": "port-hueneme",
-		"name": "Port Hueneme / Oxnard",
-		"region": "ventura",
-		"lat": 34.145,
-		"lon": -119.205,
-		"types": ["boat"],
-		"offshoreModelPoint": { "lat": 34.12, "lon": -119.3 },
-		"cdipBuoyId": "141",
-		"coopsStationId": "9411065",
-		"exposureDeg": 200
-	},
-	{
 		"id": "anacapa-island",
 		"name": "Anacapa Island",
 		"region": "channel-islands",
 		"lat": 34.015,
 		"lon": -119.365,
-		"types": ["dive", "boat"],
+		"types": ["dive"],
 		"offshoreModelPoint": { "lat": 33.99, "lon": -119.43 },
 		"cdipBuoyId": "212",
 		"coopsStationId": "9410971",
@@ -212,7 +176,7 @@
 		"region": "channel-islands",
 		"lat": 33.345,
 		"lon": -118.325,
-		"types": ["dive", "boat"],
+		"types": ["dive"],
 		"offshoreModelPoint": { "lat": 33.32, "lon": -118.42 },
 		"coopsStationId": "9410079",
 		"exposureDeg": 160,
@@ -224,7 +188,7 @@
 		"region": "santa-barbara",
 		"lat": 34.408,
 		"lon": -119.685,
-		"types": ["surf", "boat"],
+		"types": ["surf"],
 		"offshoreModelPoint": { "lat": 34.39, "lon": -119.8 },
 		"cdipBuoyId": "090",
 		"coopsStationId": "9411340",

@@ -5,7 +5,7 @@
 A fast, reliable ocean dashboard for Southern California: current conditions
 and a ~14-day outlook for waves/swell (height, period, direction), tides,
 currents, water temperature, and satellite-derived water clarity ("visibility")
-at named surf/dive/boating spots.
+at named surf/dive spots.
 
 ## System shape
 
@@ -35,7 +35,7 @@ busy public site makes only a handful of upstream calls per spot per day.
 1. **NOAA-primary, public domain.** No keys, no license cliffs, no
    monetization restrictions. GFS-Wave is the same 16-day model Open-Meteo
    serves, CDIP gives us near-shore surf accuracy Open-Meteo can't, and
-   CO-OPS gives real tide gauges for boaters.
+   CO-OPS gives real tide gauges at the spots themselves.
 2. **SvelteKit as a full-stack BFF** (server routes on a Node host). Keeps one
    codebase/language (TypeScript) and one deploy target. No SSR requirement;
    server routes are the API.

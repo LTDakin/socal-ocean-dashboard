@@ -36,13 +36,13 @@ lazily as each adapter is built — there is no separate audit gate.
 
 ## Spot data model
 
-A curated list (v1: ~10-20 SoCal spots spanning surf / dive / boat use cases).
+A curated list (v1: ~10-20 SoCal spots spanning surf / dive use cases).
 Each spot:
 
 ```
 {
   id, name, region, lat, lon,
-  types: ["surf" | "dive" | "boat"],
+  types: ["surf" | "dive"],
   offshoreModelPoint: { lat, lon },     // deep-water GFS-Wave sample point
   cdipBuoyId?,                          // for nearest-buoy conditions
   coopsStationId?,                      // for tides/water level
