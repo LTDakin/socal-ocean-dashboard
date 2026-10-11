@@ -42,8 +42,9 @@ See [`plan-m1-grib2.md`](plan-m1-grib2.md).
   hourly + daily series per the forecast contract.
 - [x] Cache (per-spot, per-cycle, TTL ~1 h) + stale-if-error.
 - [x] `GET /api/spot/[id]/forecast` green with provenance (`modelRun`, `asOf`).
-- [~] `lib/derive`: daily aggregations ✅ (`lib/derive/daily.ts`); Secchi depth
-  (ZSD ≈ 1.44/Kd490), rating bands, and the surf score remain.
+- [x] `lib/derive`: daily aggregations (`lib/derive/daily.ts`), Secchi depth
+  (ZSD ≈ 1.44/Kd490) + rating bands (`clarity.ts`), and the surf score
+  (`surf-score.ts`). Not yet wired into the `daily[]` payload.
 
 **DoD:** one live SoCal spot returns a full ~14-day forecast through the BFF;
 a fixture yields a deterministic score and ratings.

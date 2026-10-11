@@ -50,12 +50,12 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   BFF. (`GET /api/spot/[id]/forecast`; live-verified against NOMADS. See
   `docs/plan-m2-gfswave.md`.)
 
-- [ ] **Build the derived-metrics service (`lib/derive`).**
+- [x] **Build the derived-metrics service (`lib/derive`).**
   Daily aggregations, Secchi rating bands, and the surf score, kept separate from
-  raw adapters so they can be reasoned about in isolation.
+  raw adapters so they can be reasoned about in isolation. ✅
   *Done when:* a fixture yields a deterministic score and ratings.
-  *(Daily aggregations are done — `lib/derive/daily.ts`; rating bands and the
-  surf score remain.)*
+  (`lib/derive/daily.ts`, `clarity.ts`, `surf-score.ts`; see
+  `docs/plan-m2-derive.md`.)
 
 ---
 

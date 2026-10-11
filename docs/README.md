@@ -13,6 +13,7 @@ Reading order for a new agent:
 9. **`plan-m0-providers.md`** — the provider adapter + cache foundation (BFF core) plan.
 10. **`plan-m1-grib2.md`** — the GRIB2 decode seam (`lib/grib2`) plan.
 11. **`plan-m2-gfswave.md`** — the GFS-Wave adapter + `/forecast` endpoint plan.
+12. **`plan-m2-derive.md`** — the derived-metrics (`lib/derive`) plan: Secchi rating bands + surf score.
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -30,7 +31,8 @@ Reading order for a new agent:
 - [x] Provider adapter/cache foundation
 - [x] M1: GRIB2 decode seam (`lib/grib2`; fixtures decode to the cross-checked values)
 - [x] M2a: GFS-Wave adapter + `GET /api/spot/[id]/forecast` (live-verified)
-- [ ] Implementation (derived metrics → remaining adapters → frontend → ship)
+- [x] M2b: derived metrics (`lib/derive`): daily aggregates, Secchi rating bands, surf score
+- [ ] Implementation (remaining adapters → frontend → ship)
 
 ## Using status markers
 
