@@ -4,7 +4,8 @@ Real upstream samples committed so tests and local dev **never hit the live
 APIs**. These are frozen snapshots; the values go stale, and that is fine — they
 exist to exercise the codec, adapters, and contract tests deterministically.
 
-Captured **2026-10-11** (UTC) during the [data audit](../../../docs/data-sources.md#data-audit-results).
+Captured **2026-10-11** (UTC); the confirmed endpoints live in
+[`docs/data-sources.md` → Provider endpoints](../../../docs/data-sources.md#provider-endpoints-confirmed-2026-10-11).
 Provenance for every file is in the tables below.
 
 ## `nomads/` — GFS-Wave (WW3) GRIB2
