@@ -11,7 +11,7 @@ data-audit gate and no library-hardening milestone. Each milestone has a
 ## M0 — Scaffold, spots & BFF core
 - [x] pnpm workspaces monorepo (`apps/web`); SvelteKit 3 + Tailwind v4; TS
   strict; lint/format/test/type-check wired; CI runs on Node LTS.
-- [ ] Seed spot list (~10–20 spots, mixed surf/dive/boat) in
+- [x] Seed spot list (~10–20 spots, mixed surf/dive/boat) in
   `apps/web/src/lib/spots/`, with station IDs filled in from `data-sources.md`.
 - [ ] Provider adapter interface + TTL cache foundation (the
   `getSpotData(spot, window) -> normalized bundle` seam, the

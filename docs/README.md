@@ -22,7 +22,8 @@ Reading order for a new agent:
 - [x] Tech plan written
 - [x] Owner sign-off ("Ready to Code")
 - [x] M0a: monorepo scaffold & developer tooling (`pnpm lint/check/test/build` green)
-- [ ] Seed spot list + provider adapter/cache foundation
+- [x] Seed spot list (19 SoCal spots, station IDs filled in)
+- [ ] Provider adapter/cache foundation
 - [ ] Implementation (GRIB2 decode → wave adapter → remaining adapters → frontend → ship)
 
 ## Using status markers

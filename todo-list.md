@@ -18,10 +18,11 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   lint/format/type-check, vitest, and CI on Node LTS. `packages/grib2` was
   dropped at M0 in favour of `@mattnucc/gribberish`. ✅
 
-- [ ] **Curate the seed spot list.**
+- [x] **Curate the seed spot list.**
   ~10–20 SoCal spots spanning surf/dive/boat with the spot model from
   `data-sources.md` (offshore model point, buoy/station linkage, exposure).
-  *Done when:* the seed JSON exists with station IDs filled in.
+  *Done when:* the seed JSON exists with station IDs filled in. ✅
+  (19 spots in `apps/web/src/lib/spots/spots.json`.)
 
 - [ ] **Build the provider adapter interface + cache foundation (BFF core).**
   The shared `getSpotData(spot, window) -> normalized bundle` contract, the TTL
