@@ -5,6 +5,7 @@
 	 * behind the page with its vintage (`docs/api-contracts.md`).
 	 */
 	import { formatRelativeTime } from '../format';
+	import { SHORT_DISCLAIMER } from '../attribution';
 	import type { SourceRecord } from '../providers/types';
 	import { providerLabel } from './presentation';
 
@@ -38,7 +39,5 @@
 			</li>
 		{/each}
 	</ul>
-	<p class="mt-3">
-		Experimental — conditions can change without warning. Not for safety-critical decisions.
-	</p>
+	<p class="mt-3">{SHORT_DISCLAIMER}</p>
 </footer>

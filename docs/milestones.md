@@ -81,7 +81,9 @@ observed clarity + rating + `asOf`.
 - [x] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
   condition panel, provenance footer. (`/spot/[id]`; see
   [`plan-m4-detail.md`](plan-m4-detail.md).)
-- [ ] Attribution + safety disclaimers in the app footer (minimal about page).
+- [x] Attribution + safety disclaimers in the app footer and the `/about`
+  methodology page (shared `lib/attribution` credits; see
+  [`plan-m4-attribution.md`](plan-m4-attribution.md)).
 
 **DoD:** `/` lists spots with current snapshots; spot detail works for one spot
 of each type (surf/dive); attribution and disclaimers are visible.

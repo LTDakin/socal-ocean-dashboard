@@ -105,9 +105,14 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   `surfScore`/`bestTimeWindow` now carried on the `/forecast` `daily[]`. See
   `docs/plan-m4-detail.md`.)
 
-- [] **Build the about / methodology page**
-  Explanation of data sources, how we process them to generate predictions/visibility/conditions.
-  *Done when:* About page has a quick to scan but comprehensive methodology explanation to win logos and ethos with divers and surfers.
+- [x] **Build the about / methodology page.**
+  A quick-to-scan but comprehensive explanation of every data source and how we
+  turn it into wave/swell forecasts, tides, observations, clarity/visibility,
+  and the surf score — plus the credits and safety disclaimers. ✅
+  *Done when:* `/about` explains the methodology and the footer carries the
+  attribution + disclaimer.
+  (`lib/attribution` credits + `/about` page + footer roll-up; see
+  `docs/plan-m4-attribution.md`.)
 
 ---
 

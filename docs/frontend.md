@@ -19,7 +19,7 @@ spots* and *dive spots*; the seed list (`lib/spots/spots.json`), the spot model
 |---|---|
 | `/` | **Dashboard:** spot cards (current wave height, water temp, clarity band, tide state), favorites persisted locally, quick jump. |
 | `/spot/[id]` | **Spot detail:** current conditions panel, 14-day wave/swell chart, daily surf-score strip, tide curve, clarity card (labeled "observed"), data provenance footer (model run, asOf). |
-| `/about` | **Attribution:** data credits + safety disclaimers (minimal about page). |
+| `/about` | **Attribution & methodology:** data credits, how each number is derived, and safety disclaimers. |
 
 > Deferred: `/map` route with condition-colored spot markers (post-MVP).
 

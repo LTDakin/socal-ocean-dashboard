@@ -24,6 +24,8 @@ Reading order for a new agent:
 17. **`plan-m4-detail.md`** — the spot detail page plan (conditions panel,
     14-day wave/swell chart, surf-score strip, tide curve, clarity card,
     provenance footer; wires `surfScore`/`bestTimeWindow` into `daily[]`).
+18. **`plan-m4-attribution.md`** — the attribution / safety-disclaimer plan
+    (shared `lib/attribution` credits + the `/about` methodology page).
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -52,8 +54,9 @@ Reading order for a new agent:
 - [x] M4b: spot detail experience (`/spot/[id]`: conditions panel, wave/swell
       chart, surf-score strip, tide curve, clarity card, provenance footer;
       `surfScore`/`bestTimeWindow` wired into `daily[]`)
-- [ ] Implementation (frontend → ship); next up: attribution + disclaimers
-      (Priority 3, third bullet)
+- [x] M4c: attribution, safety disclaimers & the about/methodology page
+      (shared `lib/attribution` credits, footer roll-up + link, `/about` page)
+- [ ] M5: ship (deploy + env-driven config)
 
 ## Using status markers
 

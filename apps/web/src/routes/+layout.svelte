@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
+	import { SHORT_DISCLAIMER, sourceNames } from '../lib/attribution';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import { preferences } from '../lib/stores/preferences.svelte';
 	import type { LayoutProps } from './$types';
@@ -50,10 +51,16 @@
 	</main>
 
 	<footer class="border-t border-sea/30 bg-abyss/85">
-		<div class="mx-auto w-full max-w-6xl px-4 py-4 text-xs text-foam/45">
+		<div class="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-foam/45">
+			<p>Data: {sourceNames()}.</p>
 			<p>
-				Data: NOAA CDIP · NDBC · CO-OPS · GFS-Wave · CoastWatch VIIRS. Experimental — not for
-				safety-critical decisions.
+				{SHORT_DISCLAIMER}
+				<a
+					href={resolve('/about')}
+					class="text-foam/60 underline-offset-2 transition hover:text-foam hover:underline"
+				>
+					Sources &amp; methodology →
+				</a>
 			</p>
 		</div>
 	</footer>
