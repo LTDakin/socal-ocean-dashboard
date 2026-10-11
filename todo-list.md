@@ -105,18 +105,9 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   `surfScore`/`bestTimeWindow` now carried on the `/forecast` `daily[]`. See
   `docs/plan-m4-detail.md`.)
 
-- [ ] **Add attribution + disclaimers.**
-  Data credits per `data-sources.md` and safety disclaimers, surfaced in the app
-  footer (minimal about page).
-  *Done when:* attribution and disclaimers are visible.
-
----
-
-## Priority 4 — Ship
-
-- [ ] **Deploy the MVP.**
-  Node adapter host + CDN, env-driven config.
-  *Done when:* the deployed site serves a working dashboard and spot detail.
+- [] **Build the about / methodology page**
+  Explanation of data sources, how we process them to generate predictions/visibility/conditions.
+  *Done when:* About page has a quick to scan but comprehensive methodology explanation to win logos and ethos with divers and surfers.
 
 ---
 
@@ -124,20 +115,6 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 Not needed to validate the MVP; revisit once the core loop is live.
 
-- MapLibre spot map with condition-driven colors.
-- Full about / methodology page.
 - Resilience layer: rate limiting, retry/backoff, pre-warm cron, error telemetry.
-- Pinning/verifying `@mattnucc/gribberish` prebuilt binaries on the deploy host.
-- Contract/golden test coverage beyond the minimum to trust a value.
 
 ---
-
-## Guiding order (why this sequence)
-
-1. **Adapter/cache seam before providers** — every provider plugs into one
-   interface, so adding sources stays mechanical.
-2. **Decode before the wave adapter** — the forecast is the product.
-3. **Data contracts before UI** — the frontend is a pure consumer of the
-   envelope.
-4. **Ship the core loop, add polish later** — map, hardening, and exhaustive
-   tests are deferred.
