@@ -115,7 +115,9 @@ queries used), so tests and dev never hit the live APIs.
 - **Data API:** `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter`
 - **Metadata API:** `https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json`
 - **No token required** for v1 calls (verified for predictions and
-  water_temperature). `date=today|recent|latest`; arbitrary dates are rejected.
+  water_temperature). `date=today|recent|latest` covers single-day/latest
+  windows; for an arbitrary range use `begin_date`/`end_date` (`YYYYMMDD`, up to
+  1 year) — confirmed live for a 3-day hourly + `hilo` pull.
 - **Station IDs (tide predictions + water level):** `9410230` La Jolla (Scripps
   Wharf); `9410170` San Diego (Broadway); `9410196` Mission Bay; `9410580`
   Newport Bay Entrance / Corona del Mar; `9410583` Balboa Pier; `9410660` LA

@@ -54,11 +54,13 @@ See [`plan-m2-gfswave.md`](plan-m2-gfswave.md).
 ---
 
 ## M3 — Tides, real-time observations & clarity
-- [ ] CO-OPS adapter (tide predictions + water level), CDIP buoy obs (IOOS
-  ERDDAP JSON), NDBC gap-fill.
+- [x] CO-OPS adapter (tide predictions + water level), CDIP buoy obs (IOOS
+  ERDDAP JSON), NDBC gap-fill. — **tides half done** (`coops` adapter +
+  `GET /api/spot/[id]/tides`; see [`plan-m3-tides.md`](plan-m3-tides.md)).
+  Water level + CDIP/NDBC remain the real-time observations service.
 - [ ] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL), labeled "observed, not
   forecast".
-- [ ] `current`, `tides`, and `clarity` endpoints per contracts.
+- [ ] `current`, `tides`, and `clarity` endpoints per contracts. — `tides` ✅
 
 **DoD:** `current` shows merged buoy+tide+clarity fields with provenance;
 `tides` renders an MLLW curve for a spot; `clarity` shows observed clarity +

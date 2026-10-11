@@ -35,5 +35,38 @@ export type {
 	SwellPartition,
 	WaveHourlyPoint
 } from './gfswave';
-export { gfsWaveAdapter, getSpotForecast, providerCache, spotDataService } from './registry';
-export type { ForecastEnvelope, GetSpotForecastOptions } from './registry';
+export {
+	buildCoopsPredictionsUrl,
+	buildTidePredictions,
+	createCoopsAdapter,
+	createCoopsSource,
+	parseCoopsTime,
+	COOPS_DATAGETTER_URL,
+	COOPS_PROVIDER_ID,
+	COOPS_STALE_TTL_MS,
+	COOPS_TTL_MS
+} from './coops';
+export type {
+	CoopsAdapterOptions,
+	CoopsFetchLike,
+	CoopsInterval,
+	CoopsSource,
+	CoopsSourceOptions,
+	CoopsTides,
+	RawTidePrediction,
+	TidePrediction
+} from './coops';
+export {
+	coopsAdapter,
+	gfsWaveAdapter,
+	getSpotForecast,
+	getSpotTides,
+	providerCache,
+	spotDataService
+} from './registry';
+export type {
+	ForecastEnvelope,
+	GetSpotForecastOptions,
+	GetSpotTidesOptions,
+	TidesEnvelope
+} from './registry';

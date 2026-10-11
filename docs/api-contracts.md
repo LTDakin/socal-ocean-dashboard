@@ -43,8 +43,12 @@ The core product. Both series for the full ~14-16 day window:
   `bestTimeWindow`.
 
 ### `GET /api/spot/[id]/tides`
-CO-OPS predictions for the spot's tide station over the same window:
-`time, high/low flag, height` (MLLW). Rendered as a tide curve.
+CO-OPS predictions for the spot's tide station over the same window. `data.coops`
+is `{ spotId, stationId, datum: "MLLW", units: "metric", window, generatedAt,
+predictions[] }` where each prediction is `{ time, highLow: "high" | "low" | null,
+heightM }` — the hourly MLLW curve (`highLow: null`) merged with the exact
+high/low events. Rendered as a tide curve. `asOf` is the payload generation time:
+predictions are astronomical and carry no upstream model run.
 
 ### `GET /api/spot/[id]/clarity`
 Latest clarity observation: `asOf, kd490, secchiDepth (m), rating` where

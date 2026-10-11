@@ -8,6 +8,7 @@
  */
 import { TtlCache } from '../cache';
 import type { Spot } from '../spots';
+import { createCoopsAdapter, COOPS_PROVIDER_ID, type CoopsTides } from './coops';
 import { createGfsWaveAdapter, defaultForecastWindow, type GfsWaveForecast } from './gfswave';
 import { SpotDataService } from './service';
 import type { DataEnvelope, ForecastWindow } from './types';
@@ -17,9 +18,10 @@ export const providerCache = new TtlCache();
 
 /** The registered adapters. The stub is deliberately not registered. */
 export const gfsWaveAdapter = createGfsWaveAdapter();
+export const coopsAdapter = createCoopsAdapter();
 
 export const spotDataService = new SpotDataService({
-	adapters: [gfsWaveAdapter],
+	adapters: [gfsWaveAdapter, coopsAdapter],
 	cache: providerCache
 });
 
@@ -48,4 +50,31 @@ export async function getSpotForecast(
 		}
 	);
 	return envelope as ForecastEnvelope;
+}
+
+export interface GetSpotTidesOptions {
+	/** Defaults to `defaultForecastWindow()` (~14 days from now). */
+	window?: ForecastWindow;
+	forceRefresh?: boolean;
+	signal?: AbortSignal;
+}
+
+/** Typed alias for the `/tides` envelope's `data`. */
+export type TidesEnvelope = DataEnvelope<{ coops: CoopsTides }>;
+
+/** The tide predictions the `/api/spot/[id]/tides` route serves. */
+export async function getSpotTides(
+	spot: Spot,
+	options: GetSpotTidesOptions = {}
+): Promise<TidesEnvelope> {
+	const envelope = await spotDataService.getSpotData(
+		spot,
+		options.window ?? defaultForecastWindow(),
+		{
+			providers: [COOPS_PROVIDER_ID],
+			forceRefresh: options.forceRefresh ?? false,
+			signal: options.signal
+		}
+	);
+	return envelope as TidesEnvelope;
 }

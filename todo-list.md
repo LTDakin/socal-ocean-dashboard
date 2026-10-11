@@ -61,10 +61,12 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 ## Priority 2 — Auxiliary observation services
 
-- [ ] **Build the tides service.**
+- [x] **Build the tides service.**
   CO-OPS adapter (predictions + water level) and the `tides` endpoint over the
-  forecast window.
+  forecast window. ✅
   *Done when:* an MLLW curve renders for a spot.
+  (`coops` adapter + `GET /api/spot/[id]/tides`; fixture-backed, live-verified.
+  See `docs/plan-m3-tides.md`. Water level belongs to the observations service.)
 
 - [ ] **Build the real-time observations service.**
   CDIP buoy obs (IOOS ERDDAP JSON) + NDBC gap-fill, merged with tide/clarity into

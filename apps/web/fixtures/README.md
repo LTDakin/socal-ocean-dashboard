@@ -51,10 +51,17 @@ offshore water).
 
 Station `9410230` (La Jolla, Scripps Wharf).
 
-| File                                         | Source query                                                                                                                                                            |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `predictions.9410230.2026-10-11.hourly.json` | `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=h` |
-| `water_temperature.9410230.latest.json`      | `.../datagetter?date=latest&station=9410230&product=water_temperature&time_zone=gmt&units=metric&format=json`                                                           |
+| File                                                     | Source query                                                                                                                                                            |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `predictions.9410230.2026-10-11.hourly.json`             | `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=h` |
+| `predictions.9410230.2026-10-11..2026-10-13.hourly.json` | `.../datagetter?begin_date=20261011&end_date=20261013&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=h`                 |
+| `predictions.9410230.2026-10-11..2026-10-13.hilo.json`   | `.../datagetter?begin_date=20261011&end_date=20261013&station=9410230&product=predictions&datum=MLLW&time_zone=gmt&units=metric&format=json&interval=hilo`              |
+| `water_temperature.9410230.latest.json`                  | `.../datagetter?date=latest&station=9410230&product=water_temperature&time_zone=gmt&units=metric&format=json`                                                           |
+
+The range pair (hourly + `hilo`) exercises the tide adapter: `interval=h` is the
+curve, `interval=hilo` the high/low events it merges in. `date=today` is
+day-granular and can't cover a 14-day window, so the adapter uses
+`begin_date`/`end_date` (up to 1 year).
 
 ## Adding fixtures
 
