@@ -86,6 +86,18 @@
 		"exposureDeg": 200
 	},
 	{
+		"id": "trestles",
+		"name": "Trestles (San Onofre)",
+		"region": "orange",
+		"lat": 33.3806,
+		"lon": -117.5936,
+		"types": ["surf"],
+		"offshoreModelPoint": { "lat": 33.36, "lon": -117.68 },
+		"cdipBuoyId": "271",
+		"coopsStationId": "9410580",
+		"exposureDeg": 215
+	},
+	{
 		"id": "malibu-surfrider",
 		"name": "Malibu (Surfrider Beach)",
 		"region": "los-angeles",
@@ -133,6 +145,18 @@
 		"cdipBuoyId": "092",
 		"coopsStationId": "9410660",
 		"exposureDeg": 220
+	},
+	{
+		"id": "santa-monica",
+		"name": "Santa Monica (Ocean Park)",
+		"region": "los-angeles",
+		"lat": 34.0075,
+		"lon": -118.489,
+		"types": ["surf"],
+		"offshoreModelPoint": { "lat": 33.97, "lon": -118.58 },
+		"cdipBuoyId": "028",
+		"coopsStationId": "9410840",
+		"exposureDeg": 250
 	},
 	{
 		"id": "ventura-c-street",
@@ -183,6 +207,18 @@
 		"favoriteSeed": true
 	},
 	{
+		"id": "santa-cruz-island-scorpion",
+		"name": "Scorpion Anchorage, Santa Cruz Island",
+		"region": "channel-islands",
+		"lat": 34.0489,
+		"lon": -119.5564,
+		"types": ["dive"],
+		"offshoreModelPoint": { "lat": 33.99, "lon": -119.55 },
+		"cdipBuoyId": "089",
+		"coopsStationId": "9410971",
+		"exposureDeg": 160
+	},
+	{
 		"id": "santa-barbara",
 		"name": "Santa Barbara (Leadbetter)",
 		"region": "santa-barbara",
@@ -194,5 +230,17 @@
 		"coopsStationId": "9411340",
 		"exposureDeg": 185,
 		"favoriteSeed": true
+	},
+	{
+		"id": "campus-point",
+		"name": "Campus Point (Goleta)",
+		"region": "santa-barbara",
+		"lat": 34.4043,
+		"lon": -119.8467,
+		"types": ["surf", "dive"],
+		"offshoreModelPoint": { "lat": 34.38, "lon": -119.94 },
+		"cdipBuoyId": "090",
+		"coopsStationId": "9411340",
+		"exposureDeg": 185
 	}
 ]
