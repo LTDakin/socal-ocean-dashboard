@@ -84,7 +84,9 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 - [ ] **Build the app shell + dashboard.**
   Routing, Tailwind tokens, spots store + local favorites, dashboard `SpotCard`
-  list, shared ECharts wrapper, and empty/loading/stale states.
+  list, shared ECharts wrapper, and empty/loading/stale states. Top level should be
+  best surf spots, dive spots. Data cards with vis, swell, tide chart, dense data for experienced surfers and divers to quickly understand with a glance. no boating needed: update scope to remove boating from
+  other mds. 
   *Done when:* `/` lists spots with current snapshots.
 
 - [ ] **Build the spot detail experience.**
