@@ -26,8 +26,8 @@ Errors use HTTP status + `{ "ok": false, "error": { "code", "message", "retryabl
 ### `GET /api/spots`
 List of curated spots (see `data-sources.md` spot model), with a lightweight
 `current` snapshot for list rendering (wave height, water temp, tide state; the
-clarity band joins it once `/clarity` exists) so the dashboard renders without
-N+1 detail calls.
+clarity band joins it from `/clarity`) so the dashboard renders without N+1
+detail calls.
 
 ### `GET /api/spot/[id]/current`
 The merged real-time observation snapshot. `data.current`:
@@ -71,9 +71,22 @@ high/low events. Rendered as a tide curve. `asOf` is the payload generation time
 predictions are astronomical and carry no upstream model run.
 
 ### `GET /api/spot/[id]/clarity`
-Latest clarity observation: `asOf, kd490, secchiDepth (m), rating` where
-`rating` is one of `poor | fair | good | excellent` (derivation in
-`apps/web/src/lib/derive`). Explicitly annotated **observed, not forecast**.
+The latest observed satellite clarity, explicitly annotated **observed, not
+forecast** (the VIIRS product lags 2-3 days). `data.clarity`:
+
+```jsonc
+{
+  "spotId": "la-jolla-shores",
+  "observedAt": "2026-10-08T12:00:00Z", // satellite day, or null when all cloud
+  "kd490": 0.02625,          // observed diffuse attenuation (m^-1)
+  "secchiDepthM": 54.86,     // derived: ZSD ≈ 1.44 / Kd490
+  "rating": "excellent",     // poor | fair | good | excellent | null
+  "pixel": { "lat": 32.86875, "lon": -117.39375 } // 4 km cell read
+}
+```
+
+Envelope `asOf` is the satellite day; a valid spot with no clear pixel is `200`
+with a null observation, not an error.
 
 ## Derived metrics (backend `lib/derive`)
 

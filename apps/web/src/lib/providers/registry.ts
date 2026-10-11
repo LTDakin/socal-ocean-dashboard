@@ -9,6 +9,12 @@
 import { TtlCache } from '../cache';
 import type { Spot } from '../spots';
 import { createCdipAdapter, CDIP_PROVIDER_ID, type CdipObservations } from './cdip';
+import {
+	clarityWindow,
+	createCoastwatchAdapter,
+	COASTWATCH_PROVIDER_ID,
+	type ClarityObservation
+} from './coastwatch';
 import { createCoopsAdapter, COOPS_PROVIDER_ID, type CoopsTides } from './coops';
 import { createCoopsObsAdapter, COOPS_OBS_PROVIDER_ID, type CoopsObservations } from './coops-obs';
 import {
@@ -31,9 +37,17 @@ export const coopsAdapter = createCoopsAdapter();
 export const cdipAdapter = createCdipAdapter();
 export const ndbcAdapter = createNdbcAdapter();
 export const coopsObsAdapter = createCoopsObsAdapter();
+export const coastwatchAdapter = createCoastwatchAdapter();
 
 export const spotDataService = new SpotDataService({
-	adapters: [gfsWaveAdapter, coopsAdapter, cdipAdapter, ndbcAdapter, coopsObsAdapter],
+	adapters: [
+		gfsWaveAdapter,
+		coopsAdapter,
+		cdipAdapter,
+		ndbcAdapter,
+		coopsObsAdapter,
+		coastwatchAdapter
+	],
 	cache: providerCache
 });
 
@@ -148,3 +162,45 @@ export type CurrentBundle = {
 	ndbc: NdbcObservations;
 	'coops-obs': CoopsObservations;
 };
+
+export interface GetSpotClarityOptions {
+	/** Defaults to `clarityWindow(now)` (day-quantized, 10-day lookback). */
+	window?: ForecastWindow;
+	/** Injectable clock (epoch ms) for the default window; defaults to `Date.now`. */
+	now?: number;
+	forceRefresh?: boolean;
+	signal?: AbortSignal;
+}
+
+/** Typed alias for the `/clarity` envelope's `data`. */
+export type ClarityEnvelope = DataEnvelope<{ clarity: ClarityObservation }>;
+
+/**
+ * The observed clarity the `/api/spot/[id]/clarity` route serves: the newest
+ * cloud-free VIIRS Kd490 pixel at the spot's in-water sample point, with the
+ * derived Secchi depth and rating band. It is labeled "observed, not forecast"
+ * because the satellite product lags by 2-3 days.
+ */
+export async function getSpotClarity(
+	spot: Spot,
+	options: GetSpotClarityOptions = {}
+): Promise<ClarityEnvelope> {
+	const envelope = await spotDataService.getSpotData(
+		spot,
+		options.window ?? clarityWindow(options.now),
+		{
+			providers: [COASTWATCH_PROVIDER_ID],
+			forceRefresh: options.forceRefresh ?? false,
+			signal: options.signal
+		}
+	);
+
+	return {
+		ok: true,
+		spotId: envelope.spotId,
+		asOf: envelope.asOf,
+		stale: envelope.stale,
+		sources: envelope.sources,
+		data: { clarity: envelope.data[COASTWATCH_PROVIDER_ID] as ClarityObservation }
+	};
+}

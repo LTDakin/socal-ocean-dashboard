@@ -55,12 +55,15 @@ days). `activestations.socal.json` is the evidence for the CDIP→NDBC twin tabl
 
 ## `coastwatch/` — VIIRS Kd490 clarity
 
-| File                                          | Source query                                                                                                                        |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `nesdisVHNkd490Daily.lajolla.2026-10-08.json` | `https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNkd490Daily.json?kd_490[(2026-10-08T12:00:00Z)][(0.0)][(32.75)][(-117.5)]` |
+| File                                                        | Source query                                                                                                                        |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `nesdisVHNkd490Daily.lajolla.2026-10-08.json`               | `https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNkd490Daily.json?kd_490[(2026-10-08T12:00:00Z)][(0.0)][(32.75)][(-117.5)]` |
+| `nesdisVHNkd490Daily.lajolla.range.2026-10-01..latest.json` | `.../griddap/nesdisVHNkd490Daily.json?kd_490[(2026-10-01T12:00:00Z):1:last][(0.0)][(32.75)][(-117.5)]`                              |
 
-Yields `kd_490 = 0.03424 m⁻¹` at 32.76°N, 117.51°W (Secchi ≈ 42 m — clear
-offshore water).
+The single-row file yields `kd_490 = 0.03424 m⁻¹` at 32.76°N, 117.51°W (Secchi ≈
+42 m — clear offshore water). The range file mirrors the adapter's lookback query
+(the `1:last` range form): eight daily rows, with **2026-10-07 a cloud gap**
+(`null`), so the parser's newest-cloud-free selection is exercised for real.
 
 ## `coops/` — NOAA CO-OPS tides & observations
 

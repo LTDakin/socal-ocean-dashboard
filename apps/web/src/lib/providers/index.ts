@@ -58,9 +58,11 @@ export type {
 } from './coops';
 export {
 	cdipAdapter,
+	coastwatchAdapter,
 	coopsAdapter,
 	coopsObsAdapter,
 	gfsWaveAdapter,
+	getSpotClarity,
 	getSpotCurrent,
 	getSpotForecast,
 	getSpotTides,
@@ -69,9 +71,11 @@ export {
 	spotDataService
 } from './registry';
 export type {
+	ClarityEnvelope,
 	CurrentBundle,
 	CurrentEnvelope,
 	ForecastEnvelope,
+	GetSpotClarityOptions,
 	GetSpotCurrentOptions,
 	GetSpotForecastOptions,
 	GetSpotTidesOptions,
@@ -145,3 +149,27 @@ export type {
 	FieldProvenance,
 	ObservationBundle
 } from './current';
+export {
+	buildCoastwatchKd490Url,
+	clarityWindow,
+	createCoastwatchAdapter,
+	createCoastwatchSource,
+	parseCoastwatchKd490,
+	toClarityObservation,
+	CLARITY_LOOKBACK_DAYS,
+	COASTWATCH_ERDDAP_URL,
+	COASTWATCH_KD490_DATASET,
+	COASTWATCH_KD490_VARIABLE,
+	COASTWATCH_PROVIDER_ID,
+	COASTWATCH_STALE_TTL_MS,
+	COASTWATCH_TTL_MS
+} from './coastwatch';
+export type {
+	ClarityObservation,
+	CoastwatchAdapterOptions,
+	CoastwatchFetchLike,
+	CoastwatchSource,
+	CoastwatchSourceOptions,
+	Kd490Observation,
+	PixelLocation
+} from './coastwatch';

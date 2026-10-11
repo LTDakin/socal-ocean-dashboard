@@ -60,10 +60,10 @@ See [`plan-m2-gfswave.md`](plan-m2-gfswave.md).
   **observations** (`cdip` + `ndbc` + `coops-obs` adapters +
   `GET /api/spot/[id]/current`; see
   [`plan-m3-observations.md`](plan-m3-observations.md)).
-- [ ] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL), labeled "observed, not
-  forecast".
-- [ ] `current`, `tides`, and `clarity` endpoints per contracts. — `tides` ✅,
-  `current` ✅, `clarity` next.
+- [x] CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL), labeled "observed, not
+  forecast" (`coastwatch` adapter; 10-day cloud-gap lookback).
+- [x] `current`, `tides`, and `clarity` endpoints per contracts. — `tides` ✅,
+  `current` ✅, `clarity` ✅ (see [`plan-m3-clarity.md`](plan-m3-clarity.md)).
 
 **DoD:** `current` shows merged buoy+tide fields with provenance (`clarity` joins
 it via `/clarity`); `tides` renders an MLLW curve for a spot; `clarity` shows

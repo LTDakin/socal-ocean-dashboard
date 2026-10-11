@@ -76,10 +76,12 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   live-verified. See `docs/plan-m3-observations.md`. Clarity joins `/current` when
   the clarity service lands — it is observed, days late, and has its own endpoint.)
 
-- [ ] **Build the clarity service.**
+- [x] **Build the clarity service.**
   CoastWatch VIIRS Kd490 adapter (daily, ~24 h TTL) and the `clarity` endpoint,
-  labeled "observed, not forecast".
+  labeled "observed, not forecast". ✅
   *Done when:* a spot shows observed clarity + rating + `asOf`.
+  (`coastwatch` adapter + `GET /api/spot/[id]/clarity`; fixture-backed,
+  live-verified. See `docs/plan-m3-clarity.md`.)
 
 ---
 

@@ -107,7 +107,11 @@ queries used), so tests and dev never hit the live APIs.
   (0.0375°), Level-3 daily, 2017–present. (Lon0360 variant:
   `nesdisVHNkd490DailyLon0360`.)
 - **Subset:** `griddap/nesdisVHNkd490Daily.json?kd_490[(DATE)][(0.0)][(lat)][(lon)]`
-  — variable `kd_490` (m⁻¹).
+  — variable `kd_490` (m⁻¹). The daily composite row is stamped **12:00Z**, and
+  the adapter reads a lookback in one call with a value range whose end is the
+  axis maximum: `kd_490[(START):1:last][(0.0)][(lat)][(lon)]` (a `stop` past the
+  latest day errors, so `last` clamps it). It keeps the newest row with a finite,
+  strictly-positive value — cloudy days come back as the `_FillValue` (`null`).
 - **Latency:** observed ~2–3 days behind (aggregation max `2026-10-08T12:00Z`
   on 2026-10-11). Cloud gaps → missing/NaN values.
 - Example: La Jolla 2026-10-08 = 0.03424 m⁻¹ → Secchi ≈ 42 m.
