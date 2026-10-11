@@ -19,6 +19,8 @@ Reading order for a new agent:
     (CDIP + NDBC gap-fill + CO-OPS observations) + `/current` endpoint plan.
 15. **`plan-m3-clarity.md`** — the CoastWatch VIIRS Kd490 clarity service +
     `/clarity` endpoint plan.
+16. **`plan-m4-dashboard.md`** — the app shell + dashboard plan (`/api/spots`
+    list endpoint, favorites, shared ECharts wrapper).
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -42,8 +44,10 @@ Reading order for a new agent:
       `GET /api/spot/[id]/current` with per-field provenance)
 - [x] M3c: clarity service (`coastwatch` adapter + `GET /api/spot/[id]/clarity`,
       observed-not-forecast; live-verified)
-- [ ] Implementation (frontend → ship); next up: the app shell + dashboard
-      (Priority 3)
+- [x] M4a: app shell + dashboard (`GET /api/spots`, spots/favorites stores,
+      `lib/format`, shared ECharts wrapper, `/` surf+dive spot cards; live-verified)
+- [ ] Implementation (frontend → ship); next up: the spot detail experience
+      (Priority 3, second bullet)
 
 ## Using status markers
 

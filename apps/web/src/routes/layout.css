@@ -7,8 +7,24 @@
 	--color-sea: #14658c;
 	--color-surf: #4fb3d9;
 	--color-foam: #e6f4fa;
+
+	--font-sans:
+		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 html {
 	color-scheme: dark;
+}
+
+body {
+	background-color: var(--color-abyss);
+	background-image: radial-gradient(
+		120% 80% at 50% -20%,
+		color-mix(in oklab, var(--color-sea) 35%, transparent),
+		transparent 60%
+	);
+	color: var(--color-foam);
+	font-family: var(--font-sans);
+	min-height: 100dvh;
+	-webkit-font-smoothing: antialiased;
 }

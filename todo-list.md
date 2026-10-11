@@ -87,12 +87,14 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 ## Priority 3 — Frontend (after the data contracts are stable)
 
-- [ ] **Build the app shell + dashboard.**
+- [x] **Build the app shell + dashboard.**
   Routing, Tailwind tokens, spots store + local favorites, dashboard `SpotCard`
   list, shared ECharts wrapper, and empty/loading/stale states. Top level: best
   surf spots, then dive spots. Data cards with visibility, swell, and tide chart —
   dense data an experienced surfer or diver can read at a glance.
-  *Done when:* `/` lists spots with current snapshots.
+  *Done when:* `/` lists spots with current snapshots. ✅
+  (`GET /api/spots` list endpoint + `lib/format`, `lib/stores`, `lib/charts`;
+  live-verified against all providers. See `docs/plan-m4-dashboard.md`.)
 
 - [ ] **Build the spot detail experience.**
   Wave/swell chart, tide curve, clarity card, surf-score strip, conditions panel,

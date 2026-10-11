@@ -42,6 +42,7 @@
 		"#lib/*": "./src/lib/*"
 	},
 	"dependencies": {
-		"@mattnucc/gribberish": "^1.7.0"
+		"@mattnucc/gribberish": "^1.7.0",
+		"echarts": "^6.1.0"
 	}
 }

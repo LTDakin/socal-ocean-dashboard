@@ -73,9 +73,10 @@ observed clarity + rating + `asOf`.
 ---
 
 ## M4 — Frontend
-- [ ] App shell, routing, Tailwind tokens, spots store + favorites, dashboard
-  spot cards (best surf spots / dive spots), ECharts wrapper, chart
-  empty/loading/stale states.
+- [x] App shell, routing, Tailwind tokens, spots store + favorites, dashboard
+  spot cards (surf spots then dive spots), shared ECharts wrapper, chart/card
+  loading/empty/stale states. (`GET /api/spots`; see
+  [`plan-m4-dashboard.md`](plan-m4-dashboard.md).)
 - [ ] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
   condition panel, provenance footer.
 - [ ] Attribution + safety disclaimers in the app footer (minimal about page).

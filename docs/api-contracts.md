@@ -24,10 +24,38 @@ Errors use HTTP status + `{ "ok": false, "error": { "code", "message", "retryabl
 ## Endpoints
 
 ### `GET /api/spots`
-List of curated spots (see `data-sources.md` spot model), with a lightweight
-`current` snapshot for list rendering (wave height, water temp, tide state; the
-clarity band joins it from `/clarity`) so the dashboard renders without N+1
-detail calls.
+List of curated spots (see `data-sources.md` spot model) with a lightweight
+`current` snapshot for list rendering, so the dashboard renders without N+1
+detail calls. `data.spots[]` merges the same services the detail endpoints use
+(`/current`, `/clarity`, and a short `/tides` window) and flattens them:
+
+```jsonc
+{
+  "id": "la-jolla-shores", "name": "La Jolla Shores", "region": "san-diego",
+  "lat": 32.8572, "lon": -117.257, "types": ["surf", "dive"],
+  "exposureDeg": 265, "favoriteSeed": true,
+  "snapshot": {                     // every value SI, nullable when unobserved
+    "waveHeightM": 2, "wavePeriodS": 7, "waveDirDeg": 268,
+    "waterTempC": 21.4, "windSpeedMs": 6.8, "windDirDeg": 235,
+    "waterLevelM": 1.848, "tideState": "falling",
+    "clarityRating": "excellent"    // observed band (lags 2-3 days)
+  },
+  "observedAt": "2026-10-11T18:42:00Z",        // newest /current field, or null
+  "clarityObservedAt": "2026-10-08T12:00:00Z", // satellite day, or null
+  "tide": {                                     // null with no linked/fetched station
+    "stationId": "9410230",
+    "preview": [                                // next ~24 h: 3-hourly curve + every high/low
+      { "time": "2026-10-11T23:27:00Z", "heightM": -0.02, "highLow": "low" }
+    ]
+  }
+}
+```
+
+Per-spot upstream failures degrade that spot to nulls — the list is never `502`
+just because one buoy is down. Provenance is collapsed to **one `sources[]`
+entry per provider** (newest `asOf`, `stale` = any spot stale). The envelope has
+no per-spot `spotId` (the list has no single subject), so it is the standard
+envelope minus that field.
 
 ### `GET /api/spot/[id]/current`
 The merged real-time observation snapshot. `data.current`:

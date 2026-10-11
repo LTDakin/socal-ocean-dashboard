@@ -65,6 +65,7 @@ export {
 	getSpotClarity,
 	getSpotCurrent,
 	getSpotForecast,
+	getSpotsOverview,
 	getSpotTides,
 	ndbcAdapter,
 	providerCache,
@@ -78,9 +79,25 @@ export type {
 	GetSpotClarityOptions,
 	GetSpotCurrentOptions,
 	GetSpotForecastOptions,
-	GetSpotTidesOptions,
+	GetSpotsOverviewOptions,
+	SpotsOverviewEnvelope,
 	TidesEnvelope
 } from './registry';
+export {
+	assembleSpotsOverview,
+	buildSpotOverview,
+	buildTidePreview,
+	tidePreviewWindow,
+	TIDE_PREVIEW_HOURS,
+	TIDE_PREVIEW_STEP_HOURS
+} from './overview';
+export type {
+	SpotOverview,
+	SpotOverviewEntry,
+	SpotSnapshot,
+	SpotsOverviewData,
+	TidePreviewPoint
+} from './overview';
 export {
 	buildCdipWaveUrl,
 	createCdipAdapter,

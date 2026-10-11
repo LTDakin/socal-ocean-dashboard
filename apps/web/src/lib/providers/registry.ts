@@ -6,6 +6,7 @@
  * instance, per-adapter TTLs (see `docs/architecture.md`, decision #5). Adding a
  * provider is a one-line change here.
  */
+import { mapLimit } from '../async/map-limit';
 import { TtlCache } from '../cache';
 import type { Spot } from '../spots';
 import { createCdipAdapter, CDIP_PROVIDER_ID, type CdipObservations } from './cdip';
@@ -25,6 +26,7 @@ import {
 } from './current';
 import { createGfsWaveAdapter, defaultForecastWindow, type GfsWaveForecast } from './gfswave';
 import { createNdbcAdapter, NDBC_PROVIDER_ID, type NdbcObservations } from './ndbc';
+import { assembleSpotsOverview, tidePreviewWindow, type SpotOverview } from './overview';
 import { SpotDataService } from './service';
 import type { DataEnvelope, ForecastWindow } from './types';
 
@@ -202,5 +204,76 @@ export async function getSpotClarity(
 		stale: envelope.stale,
 		sources: envelope.sources,
 		data: { clarity: envelope.data[COASTWATCH_PROVIDER_ID] as ClarityObservation }
+	};
+}
+
+export interface GetSpotsOverviewOptions {
+	/** Injectable clock (epoch ms); defaults to `Date.now`. */
+	now?: number;
+	signal?: AbortSignal;
+	forceRefresh?: boolean;
+	/** Max spots fetched concurrently; defaults to 6. */
+	concurrency?: number;
+}
+
+/**
+ * The `/api/spots` envelope. The list endpoint has no single subject, so the
+ * per-spot `spotId` field of the standard envelope is omitted.
+ */
+export type SpotsOverviewEnvelope = Omit<DataEnvelope<{ spots: SpotOverview[] }>, 'spotId'>;
+
+const DEFAULT_OVERVIEW_CONCURRENCY = 6;
+
+/**
+ * The dashboard list: every curated spot with a lightweight current snapshot,
+ * observed clarity band, and a short tide preview (see
+ * `docs/api-contracts.md` → `GET /api/spots`).
+ *
+ * Per-spot upstream failures degrade that spot to nulls rather than failing the
+ * whole list — a dashboard that shows 15 spots and a blank 16th beats a 502.
+ */
+export async function getSpotsOverview(
+	spots: readonly Spot[],
+	options: GetSpotsOverviewOptions = {}
+): Promise<SpotsOverviewEnvelope> {
+	const now = options.now ?? Date.now();
+	const window = tidePreviewWindow(now);
+	const shared = {
+		now,
+		forceRefresh: options.forceRefresh ?? false,
+		...(options.signal ? { signal: options.signal } : {})
+	};
+
+	const entries = await mapLimit(
+		spots,
+		options.concurrency ?? DEFAULT_OVERVIEW_CONCURRENCY,
+		async (spot) => {
+			const [current, clarity, tides] = await Promise.all([
+				getSpotCurrent(spot, shared).catch(() => null),
+				getSpotClarity(spot, shared).catch(() => null),
+				getSpotTides(spot, { ...shared, window }).catch(() => null)
+			]);
+			return {
+				spot,
+				current: current?.data.current ?? null,
+				clarity: clarity?.data.clarity ?? null,
+				tides: tides?.data.coops ?? null,
+				sources: [
+					...(current?.sources ?? []),
+					...(clarity?.sources ?? []),
+					...(tides?.sources ?? [])
+				]
+			};
+		}
+	);
+
+	const overview = assembleSpotsOverview(entries, window, now);
+
+	return {
+		ok: true,
+		asOf: overview.asOf,
+		stale: overview.stale,
+		sources: overview.sources,
+		data: { spots: overview.spots }
 	};
 }
