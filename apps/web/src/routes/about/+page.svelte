@@ -13,19 +13,6 @@
 	const chip = 'rounded-md border border-sea/25 bg-abyss/50 px-2 py-1 font-mono text-xs';
 	const arrow = 'text-foam/30';
 
-	/** The three stages data passes through, for the flow diagram. */
-	const PIPELINE = [
-		{
-			step: 'Upstream',
-			detail: 'NOAA & Scripps public data: GFS-Wave, CDIP, NDBC, CO-OPS, VIIRS.'
-		},
-		{
-			step: 'Our server',
-			detail: 'Cached to each source’s cadence, gap-filled, then metrics derived.'
-		},
-		{ step: 'Your screen', detail: 'Dashboard and spot detail — SI in, your units out.' }
-	];
-
 	/** Secchi bands, ascending (poor → excellent), labelled with their range. */
 	const bands = [...CLARITY_BANDS]
 		.sort((a, b) => a.minSecchiM - b.minSecchiM)
@@ -96,21 +83,6 @@
 			Don't bet your life on it
 		</h2>
 		<p class="mt-2 text-sm leading-relaxed text-amber-100/90">{SAFETY_DISCLAIMER}</p>
-	</section>
-
-	<section class={card}>
-		<h2 class={heading}>How data reaches you</h2>
-		<div class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-stretch">
-			{#each PIPELINE as stage, index (stage.step)}
-				{#if index > 0}
-					<span class="hidden self-center {arrow} sm:block" aria-hidden="true">→</span>
-				{/if}
-				<div class="flex-1 rounded-lg border border-sea/25 bg-abyss/40 p-3">
-					<p class="text-xs font-semibold tracking-wide text-surf uppercase">{stage.step}</p>
-					<p class="mt-1 text-xs leading-relaxed text-foam/60">{stage.detail}</p>
-				</div>
-			{/each}
-		</div>
 	</section>
 
 	<section class="flex flex-col gap-3">
