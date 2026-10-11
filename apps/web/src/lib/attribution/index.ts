@@ -19,6 +19,8 @@ export interface DataSourceCredit {
 	description: string;
 	/** The specific dataset/product we call. */
 	dataset: string;
+	/** How often the source updates, in plain terms. */
+	cadence: string;
 	/** Public documentation/landing URL. */
 	url: string;
 	/** Usage/licensing note. */
@@ -39,6 +41,7 @@ export const DATA_SOURCES: readonly DataSourceCredit[] = [
 		description:
 			'Global wave model: significant wave height, mean & peak period, direction, and wind-wave / swell partitions.',
 		dataset: 'GFS-Wave, 0.16° West Coast grid',
+		cadence: 'model run ~every 6 h · hourly to +120 h',
 		url: 'https://nomads.ncep.noaa.gov/',
 		license: 'U.S. Government work — public domain.',
 		providers: ['gfswave']
@@ -50,6 +53,7 @@ export const DATA_SOURCES: readonly DataSourceCredit[] = [
 		description:
 			'Nearshore wave buoy observations — the real-time “now” wave height, period, and direction.',
 		dataset: 'wave_agg buoy observations (ERDDAP)',
+		cadence: 'buoy obs every 30 min',
 		url: 'https://cdip.ucsd.edu/',
 		license: 'Publicly available research data — please credit CDIP.',
 		providers: ['cdip']
@@ -61,6 +65,7 @@ export const DATA_SOURCES: readonly DataSourceCredit[] = [
 		description:
 			'Astronomical tide predictions and real-time water level, water temperature, and wind.',
 		dataset: 'Tide predictions (MLLW) + physical observations',
+		cadence: 'predictions yearly · observations every 6 min',
 		url: 'https://tidesandcurrents.noaa.gov/',
 		license: 'U.S. Government work — public domain.',
 		providers: ['coops', 'coops-obs']
@@ -72,6 +77,7 @@ export const DATA_SOURCES: readonly DataSourceCredit[] = [
 		description:
 			'Offshore buoy observations (waves, sea temperature, wind) used to gap-fill and cross-check CDIP.',
 		dataset: 'Realtime2 buoy observations',
+		cadence: 'obs every ~10 min',
 		url: 'https://www.ndbc.noaa.gov/',
 		license: 'U.S. Government work — public domain.',
 		providers: ['ndbc']
@@ -83,6 +89,7 @@ export const DATA_SOURCES: readonly DataSourceCredit[] = [
 		description:
 			'Satellite-observed water clarity (Kd490), converted to a Secchi depth and a coarse rating band.',
 		dataset: 'VIIRS (S-NPP) NRT Kd490, daily, ~4 km',
+		cadence: 'daily composite · ~2–3 day lag',
 		url: 'https://coastwatch.noaa.gov/',
 		license: 'U.S. Government work — public domain.',
 		providers: ['coastwatch']

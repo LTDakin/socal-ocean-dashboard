@@ -41,6 +41,7 @@ describe('attribution', () => {
 			expect(source.name.length, source.id).toBeGreaterThan(0);
 			expect(source.url, source.id).toMatch(/^https?:\/\//);
 			expect(source.license.length, source.id).toBeGreaterThan(0);
+			expect(source.cadence.length, source.id).toBeGreaterThan(0);
 			expect(source.providers.length, source.id).toBeGreaterThan(0);
 		}
 	});
