@@ -22,10 +22,13 @@ Project-level instructions for any agent (or human) working in this repo.
 
 ## Working rules
 
-1. **Plan before code.** Do not modify application code before reading the
-   relevant files and writing/updating a plan. Plans live in `docs/`.
-2. **"Ready to Code" gate.** The product owner signs off on the current plan
-   with the exact phrase **"Ready to Code"** before implementation proceeds.
+1. **Plan, then build in the same pass.** When the owner points you at a todo,
+   read the relevant files, write/update a short plan in `docs/`, and proceed
+   straight into implementation. Do not stop to wait for a separate sign-off —
+   the plan is a working artifact, not a gate.
+2. **Ask only on genuine blockers.** If a todo is ambiguous, contradicts a
+   "Decisions already made" item, or needs credentials/accounts, ask before
+   proceeding. Otherwise, when you are set on a todo, start building.
 3. **Follow the docs.** `docs/README.md` defines the reading order and current
    status. Update docs when architecture/contracts change.
 4. **Provider adapters are swappable.** All upstream data access goes through
