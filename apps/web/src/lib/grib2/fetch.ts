@@ -68,6 +68,11 @@ export interface Subregion {
 	right: number;
 }
 
+/** Signed degrees → NOMADS' native `[0, 360)` longitude. */
+function toNomadsLongitude(longitude: number): number {
+	return longitude < 0 ? longitude + 360 : longitude;
+}
+
 /** Parameters for a Grib Filter subset request. */
 export interface WaveSubsetParams {
 	cycle: Date | string;
@@ -77,8 +82,16 @@ export interface WaveSubsetParams {
 	variables: string[];
 	/** Model domain; defaults to `wcoast.0p16` (West Coast). */
 	domain?: string;
-	/** Restrict to a lat/lon box server-side (smaller downloads). */
+	/**
+	 * Restrict to a lat/lon box server-side (smaller downloads).
+	 */
 	subregion?: Subregion;
+	/**
+	 * Restrict to these levels, e.g. `['surface']` or `['1_in_sequence']`. Omit
+	 * to return every level for the requested variables — required for the
+	 * swell partitions, which live at `N in sequence`, not `surface`.
+	 */
+	levels?: string[];
 }
 
 /** Build the Grib Filter URL for a server-side subset. */
@@ -94,13 +107,17 @@ export function buildNomadsWaveUrl(params: WaveSubsetParams): string {
 	for (const variable of params.variables) {
 		url.searchParams.set(`var_${variable.toUpperCase()}`, 'on');
 	}
-	url.searchParams.set('lev_surface', 'on');
+	if (params.levels) {
+		for (const level of params.levels) {
+			url.searchParams.set(`lev_${level}`, 'on');
+		}
+	}
 	if (params.subregion) {
 		url.searchParams.set('subregion', '');
 		url.searchParams.set('toplat', String(params.subregion.top));
 		url.searchParams.set('bottomlat', String(params.subregion.bottom));
-		url.searchParams.set('leftlon', String(params.subregion.left));
-		url.searchParams.set('rightlon', String(params.subregion.right));
+		url.searchParams.set('leftlon', String(toNomadsLongitude(params.subregion.left)));
+		url.searchParams.set('rightlon', String(toNomadsLongitude(params.subregion.right)));
 	}
 	return url.toString();
 }

@@ -108,10 +108,25 @@ describe('buildNomadsWaveUrl', () => {
 		expect(url.searchParams.get('dir')).toBe('/gfs.20261011/00/wave/gridded');
 		expect(url.searchParams.get('file')).toBe('gfswave.t00z.wcoast.0p16.f000.grib2');
 		expect(url.searchParams.get('var_HTSGW')).toBe('on');
-		expect(url.searchParams.get('lev_surface')).toBe('on');
+		// Levels are omitted by default so sequence-level swell partitions come through.
+		expect(url.searchParams.has('lev_surface')).toBe(false);
+		expect([...url.searchParams.keys()].some((key) => key.startsWith('lev_'))).toBe(false);
 		expect(url.searchParams.get('toplat')).toBe('33');
 		expect(url.searchParams.get('bottomlat')).toBe('32.6');
 		expect(url.searchParams.has('subregion')).toBe(true);
+	});
+
+	it('sets requested levels when given', () => {
+		const url = new URL(
+			buildNomadsWaveUrl({
+				cycle: '2026-10-11T00:00:00Z',
+				forecastHour: 0,
+				variables: ['HTSGW'],
+				levels: ['surface']
+			})
+		);
+		expect(url.searchParams.get('lev_surface')).toBe('on');
+		expect(url.searchParams.has('subregion')).toBe(false);
 	});
 });
 

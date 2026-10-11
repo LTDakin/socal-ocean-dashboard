@@ -42,17 +42,20 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   *Done when:* one real GFS-Wave subset decodes to the expected fields.
   (`HTSGW` = 0.95 m at La Jolla in both fixtures; see `docs/plan-m1-grib2.md`.)
 
-- [ ] **Build the GFS-Wave provider + forecast service.**
+- [x] **Build the GFS-Wave provider + forecast service.**
   Adapter fetches per-cycle region subsets, scans fields, and emits the hourly +
   daily forecast contract with provenance (`modelRun`, `asOf`), TTL cache, and
-  stale-if-error.
+  stale-if-error. ✅
   *Done when:* one live SoCal spot returns a full ~14-day forecast through the
-  BFF.
+  BFF. (`GET /api/spot/[id]/forecast`; live-verified against NOMADS. See
+  `docs/plan-m2-gfswave.md`.)
 
 - [ ] **Build the derived-metrics service (`lib/derive`).**
   Daily aggregations, Secchi rating bands, and the surf score, kept separate from
   raw adapters so they can be reasoned about in isolation.
   *Done when:* a fixture yields a deterministic score and ratings.
+  *(Daily aggregations are done — `lib/derive/daily.ts`; rating bands and the
+  surf score remain.)*
 
 ---
 

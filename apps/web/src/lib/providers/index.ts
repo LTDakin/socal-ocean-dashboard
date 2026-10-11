@@ -1,21 +1,39 @@
 /**
- * `lib/providers` — provider adapter contract, cache-backed orchestrator, and
- * the response envelope. Public entry point for the BFF core.
+ * `lib/providers` — provider adapter contract, cache-backed orchestrator, the
+ * response envelope, and the registered real adapters. Public entry point for
+ * the BFF core.
  *
- * Real adapters (GFS-Wave, CDIP, CO-OPS, NDBC, CoastWatch) register against the
- * shared cache in later milestones; the stub adapter proves the seam until then.
+ * The stub adapter proves the seam in tests; real adapters (GFS-Wave now; CDIP,
+ * CO-OPS, NDBC, CoastWatch later) register against the shared cache in
+ * `registry.ts`.
  */
-import { TtlCache } from '../cache';
-
 export * from './types';
 export { SpotDataService, createSpotDataService } from './service';
 export type { GetSpotDataOptions, SpotDataServiceOptions } from './service';
 export { buildStubSlide, createStubAdapter } from './stub';
 export type { StubPoint, StubSlide } from './stub';
-
-/**
- * Process-wide cache shared by every provider adapter. TTLs are per-adapter
- * (they match upstream cadence, see `docs/data-sources.md`), so one cache
- * instance with per-entry windows is all the BFF core needs.
- */
-export const providerCache = new TtlCache();
+export {
+	buildGfsWaveForecast,
+	createGfsWaveAdapter,
+	createNomadsSource,
+	defaultForecastWindow,
+	latestModelCycle,
+	sampleWavePoint,
+	selectForecastHours,
+	GFSWAVE_PROVIDER_ID,
+	GFSWAVE_STALE_TTL_MS,
+	GFSWAVE_TTL_MS,
+	GFSWAVE_VARIABLES,
+	SO_CAL_REGION
+} from './gfswave';
+export type {
+	BuildForecastInput,
+	GfsWaveAdapterOptions,
+	GfsWaveForecast,
+	GfsWaveSource,
+	NomadsSourceOptions,
+	SwellPartition,
+	WaveHourlyPoint
+} from './gfswave';
+export { gfsWaveAdapter, getSpotForecast, providerCache, spotDataService } from './registry';
+export type { ForecastEnvelope, GetSpotForecastOptions } from './registry';

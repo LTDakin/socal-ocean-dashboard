@@ -38,16 +38,17 @@ See [`plan-m1-grib2.md`](plan-m1-grib2.md).
 ---
 
 ## M2 — GFS-Wave adapter, forecast endpoint & derived metrics
-- [ ] Adapter fetches per-cycle region-subsets, indexes/scans fields, builds
+- [x] Adapter fetches per-cycle region-subsets, indexes/scans fields, builds
   hourly + daily series per the forecast contract.
-- [ ] Cache (per-spot, per-cycle, TTL ~1 h) + stale-if-error.
-- [ ] `GET /api/spot/[id]/forecast` green with provenance (`modelRun`, `asOf`).
-- [ ] `lib/derive`: Secchi depth (ZSD ≈ 1.44/Kd490), rating bands, daily
-  aggregations, experimental surf score.
+- [x] Cache (per-spot, per-cycle, TTL ~1 h) + stale-if-error.
+- [x] `GET /api/spot/[id]/forecast` green with provenance (`modelRun`, `asOf`).
+- [~] `lib/derive`: daily aggregations ✅ (`lib/derive/daily.ts`); Secchi depth
+  (ZSD ≈ 1.44/Kd490), rating bands, and the surf score remain.
 
 **DoD:** one live SoCal spot returns a full ~14-day forecast through the BFF;
 a fixture yields a deterministic score and ratings.
 **Verify:** live smoke test against NOMADS.
+See [`plan-m2-gfswave.md`](plan-m2-gfswave.md).
 
 ---
 
