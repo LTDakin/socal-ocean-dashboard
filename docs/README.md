@@ -34,37 +34,6 @@ Reading order for a new agent:
 21. **`plan-now-condition-scales.md`** — the "now" panel low→high range meters
     (waves / water temp / wind / water level) + qualitative bands.
 
-> **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
-> and the GRIB2 library work as documented. There is no separate data-audit gate,
-> and library-hardening, exhaustive tests, the map, and the resilience layer are
-> deferred to post-MVP.
-
-## Current status
-
-- [x] Research: data sources evaluated
-- [x] Stack & architecture decided (NOAA-primary, SvelteKit BFF, ECharts, MapLibre)
-- [x] Tech plan written
-- [x] Owner sign-off ("Ready to Code")
-- [x] M0a: monorepo scaffold & developer tooling (`pnpm lint/check/test/build` green)
-- [x] Seed spot list (20 SoCal surf/dive spots, station IDs filled in)
-- [x] Provider adapter/cache foundation
-- [x] M1: GRIB2 decode seam (`lib/grib2`; fixtures decode to the cross-checked values)
-- [x] M2a: GFS-Wave adapter + `GET /api/spot/[id]/forecast` (live-verified)
-- [x] M2b: derived metrics (`lib/derive`): daily aggregates, Secchi rating bands, surf score
-- [x] M3a: tides service (`coops` adapter + `GET /api/spot/[id]/tides`)
-- [x] M3b: real-time observations (`cdip`, `ndbc`, `coops-obs` adapters +
-      `GET /api/spot/[id]/current` with per-field provenance)
-- [x] M3c: clarity service (`coastwatch` adapter + `GET /api/spot/[id]/clarity`,
-      observed-not-forecast; live-verified)
-- [x] M4a: app shell + dashboard (`GET /api/spots`, spots/favorites stores,
-      `lib/format`, shared ECharts wrapper, `/` surf+dive spot cards; live-verified)
-- [x] M4b: spot detail experience (`/spot/[id]`: conditions panel, wave/swell
-      chart, surf-score strip, tide curve, clarity card, provenance footer;
-      `surfScore`/`bestTimeWindow` wired into `daily[]`)
-- [x] M4c: attribution, safety disclaimers & the about/methodology page
-      (shared `lib/attribution` credits, footer roll-up + link, `/about` page)
-- [ ] M5: ship (deploy + env-driven config)
-
 ## Using status markers
 
 Docs use these check markers:
