@@ -25,13 +25,15 @@ stub adapter returns a bundle through cache.
 ---
 
 ## M1 — GRIB2 decode integration (via `gribberish`)
-- [x] ~~In-house codec~~ — superseded at M0: decode through the
-  `@mattnucc/gribberish` wrapper in `apps/web/src/lib/grib2` (fetch a NOMADS
-  subset, or a single field via `.idx` Range, → typed fields with `validTime`).
-- [ ] Small `inspect`/field-index helper so adapters can scan fields cheaply.
+- [x] Decode through the `@mattnucc/gribberish` wrapper in
+  `apps/web/src/lib/grib2` (fetch a NOMADS subset, or a single field via `.idx`
+  Range, → typed fields with `validTime`). *(In-house codec superseded at M0.)*
+- [x] Small `inspect`/field-index helper so adapters can scan fields cheaply.
 
-**DoD:** one real GFS-Wave subset decodes to the expected fields.
+**DoD:** one real GFS-Wave subset decodes to the expected fields. ✅ (`HTSGW` =
+0.95 m at La Jolla in both the simple-packed subset and the JPEG2000 full field.)
 **Verify:** `pnpm test` in `apps/web`; manual look at one field.
+See [`plan-m1-grib2.md`](plan-m1-grib2.md).
 
 ---
 

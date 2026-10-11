@@ -40,5 +40,8 @@
 	"imports": {
 		"#lib": "./src/lib/index.js",
 		"#lib/*": "./src/lib/*"
+	},
+	"dependencies": {
+		"@mattnucc/gribberish": "^1.7.0"
 	}
 }

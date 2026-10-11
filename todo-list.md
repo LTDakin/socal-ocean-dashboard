@@ -35,11 +35,12 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
 
 ## Priority 1 — Core data engine (the base of the product)
 
-- [ ] **Integrate GRIB2 decoding (`@mattnucc/gribberish`).**
+- [x] **Integrate GRIB2 decoding (`@mattnucc/gribberish`).**
   Wrap the Node bindings behind `apps/web/src/lib/grib2`: fetch a NOMADS subset
   (or a single field via `.idx` Range) → typed fields with `validTime`, plus a
-  small field-index / `inspect` helper.
+  small field-index / `inspect` helper. ✅
   *Done when:* one real GFS-Wave subset decodes to the expected fields.
+  (`HTSGW` = 0.95 m at La Jolla in both fixtures; see `docs/plan-m1-grib2.md`.)
 
 - [ ] **Build the GFS-Wave provider + forecast service.**
   Adapter fetches per-cycle region subsets, scans fields, and emits the hourly +
