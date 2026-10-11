@@ -1,0 +1,67 @@
+# API Contracts
+
+Contracts between backend (SvelteKit server routes) and frontend. **Source of
+truth** — frontend components and backend adapters should only speak these
+shapes. Units are SI (metric) internally; display conversion is the frontend's
+job. All responses use one envelope:
+
+```jsonc
+{
+  "ok": true,
+  "spotId": "scripps",
+  "asOf": "2026-10-10T18:00:00Z",     // when this bundle was produced
+  "stale": false,                       // true if served from stale cache
+  "sources": [                          // provenance per provider
+    { "provider": "gfswave", "modelRun": "2026-10-10T00:00:00Z", "fetchedAt": "..." },
+    { "provider": "coops", "stationId": "9410230", ... }
+  ],
+  "data": { /* per-endpoint payload */ }
+}
+```
+
+Errors use HTTP status + `{ "ok": false, "error": { "code", "message", "retryable" } }`.
+
+## Endpoints
+
+### `GET /api/spots`
+List of curated spots (see `data-sources.md` spot model), with a lightweight
+`current` snapshot for list rendering (wave height, water temp, clarity band,
+tide state) so the dashboard renders without N+1 detail calls.
+
+### `GET /api/spot/[id]/current`
+Real-time conditions merged from nearest buoy (CDIP/NDBC) + tide + clarity.
+Contains entries that are genuinely "now", with per-field provenance.
+
+### `GET /api/spot/[id]/forecast`
+The core product. Both series for the full ~14-16 day window:
+
+- `hourly[]`: time, significant wave height, mean & peak period, mean
+  direction, wind-wave height/period/direction, swell height/period/direction,
+  water temp, ocean current velocity/direction, wind speed/direction.
+- `daily[]`: per-day aggregations (max wave height, dominant direction, max
+  peak period / swell components), plus derived `surfScore` (0-10) and
+  `bestTimeWindow`.
+
+### `GET /api/spot/[id]/tides`
+CO-OPS predictions for the spot's tide station over the same window:
+`time, high/low flag, height` (MLLW). Rendered as a tide curve.
+
+### `GET /api/spot/[id]/clarity`
+Latest clarity observation: `asOf, kd490, secchiDepth (m), rating` where
+`rating` is one of `poor | fair | good | excellent` (derivation in
+`apps/web/src/lib/derive`). Explicitly annotated **observed, not forecast**.
+
+## Derived metrics (backend `lib/derive`)
+
+- **Surf score** (0-10): weighted function of swell height, period, direction
+  relative to spot exposure, tide, and local wind. Deterministic, units-tested,
+  config respected but clearly labeled experimental in v1.
+- **Visibility rating:** Secchi depth bands as above.
+- **Daily aggregations**: max/dominant per day for wave & swell components.
+
+## Data freshness policy
+
+- Detail endpoints return `stale: true` + `asOf` when serving cached-but-old
+  data (upstream failure) — the frontend shows "Updated X ago" from `asOf`.
+- A `generatedAt` field on forecast tells the UI exactly which model run drove
+  the values (good for trust: surfers care about the run the numbers came from).

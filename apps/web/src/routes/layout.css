@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Ocean design tokens — dark-mode-first (see docs/frontend.md). */
+@theme {
+	--color-abyss: #04121f;
+	--color-deep: #0a2540;
+	--color-sea: #14658c;
+	--color-surf: #4fb3d9;
+	--color-foam: #e6f4fa;
+}
+
+html {
+	color-scheme: dark;
+}

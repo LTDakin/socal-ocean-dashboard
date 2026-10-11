@@ -1,0 +1,19 @@
+{
+  "name": "socal-ocean-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm -r --if-present build",
+    "preview": "pnpm --filter web preview",
+    "lint": "pnpm -r --if-present lint",
+    "format": "pnpm -r --if-present format",
+    "check": "pnpm -r --if-present check",
+    "test": "pnpm -r --if-present test"
+  }
+}
