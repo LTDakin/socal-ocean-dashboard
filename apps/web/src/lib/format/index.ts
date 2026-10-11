@@ -35,6 +35,22 @@ const COMPASS_POINTS = [
 	'NNW'
 ] as const;
 
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+const MONTHS = [
+	'Jan',
+	'Feb',
+	'Mar',
+	'Apr',
+	'May',
+	'Jun',
+	'Jul',
+	'Aug',
+	'Sep',
+	'Oct',
+	'Nov',
+	'Dec'
+] as const;
+
 const MINUTE_MS = 60 * 1000;
 const HOUR_MS = 60 * MINUTE_MS;
 const DAY_MS = 24 * HOUR_MS;
@@ -130,6 +146,39 @@ const REGION_LABELS: Readonly<Record<string, string>> = {
 export function regionLabel(region: string | null | undefined): string {
 	if (!region) return NO_VALUE;
 	return REGION_LABELS[region] ?? titleCase(region);
+}
+
+/**
+ * UTC date parts shared by the day-label formatters. Accepts a `YYYY-MM-DD`
+ * bucket or any ISO instant; returns `null` when it can't be parsed.
+ */
+function utcDateParts(date: string | null | undefined): Date | null {
+	if (!date) return null;
+	const ms = Date.parse(date.length === 10 ? `${date}T00:00:00Z` : date);
+	return Number.isFinite(ms) ? new Date(ms) : null;
+}
+
+/** Compact chart-axis label for a day: `Sun 11`. UTC, so SSR and hydration agree. */
+export function formatDayLabel(date: string | null | undefined): string {
+	const value = utcDateParts(date);
+	if (!value) return NO_VALUE;
+	return `${WEEKDAYS[value.getUTCDay()]} ${value.getUTCDate()}`;
+}
+
+/** Full chart-tooltip label for a day: `Sun Oct 11`. */
+export function formatFullDate(date: string | null | undefined): string {
+	const value = utcDateParts(date);
+	if (!value) return NO_VALUE;
+	return `${WEEKDAYS[value.getUTCDay()]} ${MONTHS[value.getUTCMonth()]} ${value.getUTCDate()}`;
+}
+
+/** Clock time of an ISO instant in UTC: `18:00`. */
+export function formatClockTime(iso: string | null | undefined): string {
+	if (!iso) return NO_VALUE;
+	const ms = Date.parse(iso);
+	if (!Number.isFinite(ms)) return NO_VALUE;
+	const value = new Date(ms);
+	return `${String(value.getUTCHours()).padStart(2, '0')}:${String(value.getUTCMinutes()).padStart(2, '0')}`;
 }
 
 /** Arrow for a tide trend. */

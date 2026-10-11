@@ -21,6 +21,9 @@ Reading order for a new agent:
     `/clarity` endpoint plan.
 16. **`plan-m4-dashboard.md`** — the app shell + dashboard plan (`/api/spots`
     list endpoint, favorites, shared ECharts wrapper).
+17. **`plan-m4-detail.md`** — the spot detail page plan (conditions panel,
+    14-day wave/swell chart, surf-score strip, tide curve, clarity card,
+    provenance footer; wires `surfScore`/`bestTimeWindow` into `daily[]`).
 
 > **MVP scope note.** `todo-list.md` and `milestones.md` assume the upstream APIs
 > and the GRIB2 library work as documented. There is no separate data-audit gate,
@@ -46,8 +49,11 @@ Reading order for a new agent:
       observed-not-forecast; live-verified)
 - [x] M4a: app shell + dashboard (`GET /api/spots`, spots/favorites stores,
       `lib/format`, shared ECharts wrapper, `/` surf+dive spot cards; live-verified)
-- [ ] Implementation (frontend → ship); next up: the spot detail experience
-      (Priority 3, second bullet)
+- [x] M4b: spot detail experience (`/spot/[id]`: conditions panel, wave/swell
+      chart, surf-score strip, tide curve, clarity card, provenance footer;
+      `surfScore`/`bestTimeWindow` wired into `daily[]`)
+- [ ] Implementation (frontend → ship); next up: attribution + disclaimers
+      (Priority 3, third bullet)
 
 ## Using status markers
 

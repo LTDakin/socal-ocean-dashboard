@@ -20,11 +20,14 @@ export {
 	DEFAULT_SURF_SCORE_CONFIG,
 	angleBetweenDeg,
 	scoreSurf,
+	scoreSurfByDay,
 	scoreSurfComponents
 } from './surf-score';
 export type {
+	DailySurfScore,
 	SurfScoreComponents,
 	SurfScoreConfig,
 	SurfScoreInput,
-	SurfScoreResult
+	SurfScoreResult,
+	SurfScoreTimedInput
 } from './surf-score';

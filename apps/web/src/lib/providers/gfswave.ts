@@ -10,7 +10,12 @@
  * Derived daily extremes come from `lib/derive`. All values are SI.
  */
 import { TtlCache } from '../cache';
-import { aggregateDaily, type DailyWavePoint, type DailyWaveSummary } from '../derive';
+import {
+	aggregateDaily,
+	scoreSurfByDay,
+	type DailyWavePoint,
+	type DailyWaveSummary
+} from '../derive';
 import {
 	fetchSubsetFields,
 	sampleField,
@@ -88,6 +93,17 @@ export interface WaveHourlyPoint {
 	windDirectionDeg: number | null;
 }
 
+/**
+ * A per-day forecast row: the daily wave/swell extremes plus the derived surf
+ * score for that day (`docs/api-contracts.md` → `/forecast`).
+ */
+export interface DailyWaveForecast extends DailyWaveSummary {
+	/** Best hourly surf score that day (0-10), or `null` when unscoreable. */
+	surfScore: number | null;
+	/** ISO instant of the hour that produced `surfScore`, or `null`. */
+	bestTimeWindow: string | null;
+}
+
 /** The GFS-Wave payload: the forecast contract's `hourly[]` + `daily[]`. */
 export interface GfsWaveForecast {
 	spotId: string;
@@ -97,7 +113,7 @@ export interface GfsWaveForecast {
 	generatedAt: string;
 	window: ForecastWindow;
 	hourly: WaveHourlyPoint[];
-	daily: DailyWaveSummary[];
+	daily: DailyWaveForecast[];
 }
 
 /** Fetches the decoded fields for one forecast hour of a model cycle. */
@@ -296,6 +312,42 @@ function toDailyPoint(point: WaveHourlyPoint): DailyWavePoint {
 	};
 }
 
+/**
+ * Attach each day's best surf score to its daily summary.
+ *
+ * The score needs the spot's exposure and the hourly wind/swell, so it is
+ * computed here (not in `aggregateDaily`) and merged by UTC date. A day with no
+ * scoreable hour keeps `surfScore: null` rather than dropping the row.
+ */
+function withDailySurfScores(
+	summaries: readonly DailyWaveSummary[],
+	hourly: readonly WaveHourlyPoint[],
+	exposureDeg: number | null
+): DailyWaveForecast[] {
+	const scores = new Map(
+		scoreSurfByDay(
+			hourly.map((point) => ({
+				time: point.time,
+				swellHeightM: point.swellHeightM,
+				swellPeriodS: point.swellPeriodS,
+				swellDirectionDeg: point.swellDirectionDeg,
+				windSpeedMs: point.windSpeedMs,
+				windDirectionDeg: point.windDirectionDeg,
+				exposureDeg
+			}))
+		).map((day) => [day.date, day] as const)
+	);
+
+	return summaries.map((summary) => {
+		const day = scores.get(summary.date);
+		return {
+			...summary,
+			surfScore: day?.surfScore ?? null,
+			bestTimeWindow: day?.bestTimeWindow ?? null
+		};
+	});
+}
+
 export interface BuildForecastInput {
 	spot: Spot;
 	cycle: Date;
@@ -319,13 +371,15 @@ export function buildGfsWaveForecast(input: BuildForecastInput): GfsWaveForecast
 	}
 	hourly.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0));
 
+	const summaries = aggregateDaily(hourly.map(toDailyPoint));
+
 	return {
 		spotId: spot.id,
 		modelRun: cycle.toISOString(),
 		generatedAt: input.generatedAt,
 		window,
 		hourly,
-		daily: aggregateDaily(hourly.map(toDailyPoint))
+		daily: withDailySurfScores(summaries, hourly, spot.exposureDeg ?? null)
 	};
 }
 

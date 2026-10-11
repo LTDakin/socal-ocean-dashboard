@@ -96,10 +96,14 @@ Markers: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked
   (`GET /api/spots` list endpoint + `lib/format`, `lib/stores`, `lib/charts`;
   live-verified against all providers. See `docs/plan-m4-dashboard.md`.)
 
-- [ ] **Build the spot detail experience.**
+- [x] **Build the spot detail experience.**
   Wave/swell chart, tide curve, clarity card, surf-score strip, conditions panel,
-  and the provenance footer — one spot of each type.
+  and the provenance footer — one spot of each type. ✅
   *Done when:* detail works for surf/dive spots.
+  (`/spot/[id]` + `lib/charts/wave.ts`, `lib/components/{ConditionsPanel,
+  SurfScoreStrip,WaveForecastChart,TideChart,ClarityCard,ProvenanceFooter}.svelte`;
+  `surfScore`/`bestTimeWindow` now carried on the `/forecast` `daily[]`. See
+  `docs/plan-m4-detail.md`.)
 
 - [ ] **Add attribution + disclaimers.**
   Data credits per `data-sources.md` and safety disclaimers, surfaced in the app

@@ -5,6 +5,7 @@
 	 * server from the `/api/spots` snapshot.
 	 */
 	import { onMount, type Component } from 'svelte';
+	import { resolve } from '$app/paths';
 	import {
 		NO_VALUE,
 		formatHeight,
@@ -18,10 +19,10 @@
 		tideStateArrow,
 		type Units
 	} from '../format';
-	import type { ClarityRating } from '../derive';
 	import type { SpotOverview, TidePreviewPoint } from '../providers/overview';
 	import { favorites } from '../stores/favorites.svelte';
 	import { preferences } from '../stores/preferences.svelte';
+	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';
 
 	interface Props {
 		spot: SpotOverview;
@@ -52,19 +53,6 @@
 			? `${nextTide.highLow === 'high' ? 'High' : 'Low'} ${formatHeight(nextTide.heightM, units)} · ${formatRelativeTime(nextTide.time, now)}`
 			: NO_VALUE
 	);
-
-	const RATING_BADGE: Record<ClarityRating, string> = {
-		excellent: 'bg-cyan-400/15 text-cyan-100',
-		good: 'bg-sky-400/15 text-sky-100',
-		fair: 'bg-slate-400/20 text-slate-100',
-		poor: 'bg-amber-400/15 text-amber-100'
-	};
-	const RATING_DOT: Record<ClarityRating, string> = {
-		excellent: 'bg-cyan-300',
-		good: 'bg-sky-300',
-		fair: 'bg-slate-300',
-		poor: 'bg-amber-300'
-	};
 </script>
 
 <article
@@ -72,7 +60,14 @@
 >
 	<header class="flex items-start justify-between gap-2">
 		<div class="min-w-0">
-			<h3 class="truncate text-base font-semibold text-foam">{spot.name}</h3>
+			<h3 class="truncate text-base font-semibold text-foam">
+				<a
+					href={resolve('/spot/[id]', { id: spot.id })}
+					class="transition hover:text-surf focus-visible:text-surf"
+				>
+					{spot.name}
+				</a>
+			</h3>
 			<p class="mt-0.5 flex items-center gap-2 text-xs text-foam/50">
 				<span>{regionLabel(spot.region)}</span>
 				{#each spot.types as type (type)}
@@ -119,11 +114,11 @@
 		{/if}
 		{#if spot.snapshot.clarityRating}
 			<span
-				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium {RATING_BADGE[
+				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium {CLARITY_BADGE[
 					spot.snapshot.clarityRating
 				]}"
 			>
-				<span class="h-1.5 w-1.5 rounded-full {RATING_DOT[spot.snapshot.clarityRating]}"></span>
+				<span class="h-1.5 w-1.5 rounded-full {CLARITY_DOT[spot.snapshot.clarityRating]}"></span>
 				{titleCase(spot.snapshot.clarityRating)} visibility
 			</span>
 		{/if}

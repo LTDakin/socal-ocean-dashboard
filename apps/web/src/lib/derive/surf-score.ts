@@ -188,3 +188,67 @@ export function scoreSurf(
 ): number | null {
 	return scoreSurfComponents(input, config).score;
 }
+
+/** An hourly scoring input carrying its instant, for per-day aggregation. */
+export interface SurfScoreTimedInput extends SurfScoreInput {
+	/** ISO-8601 UTC instant; the UTC date is the aggregation bucket. */
+	time: string;
+}
+
+/** The best-scoring hour in one UTC day: drives the strip and `bestTimeWindow`. */
+export interface DailySurfScore {
+	/** `YYYY-MM-DD` (UTC). */
+	date: string;
+	/** Best hourly score that day (0-10), or `null` when no hour was scoreable. */
+	surfScore: number | null;
+	/** ISO instant of the hour that produced `surfScore`, or `null`. */
+	bestTimeWindow: string | null;
+	/** Component breakdown of the best hour, or `null`. */
+	components: SurfScoreComponents | null;
+}
+
+/** UTC calendar date of an ISO instant, or `null` if unparseable. */
+function utcDate(time: string): string | null {
+	const ms = Date.parse(time);
+	return Number.isFinite(ms) ? new Date(ms).toISOString().slice(0, 10) : null;
+}
+
+/**
+ * Group an hourly series into one best-scoring hour per UTC day.
+ *
+ * The forecast contract's `daily[]` carries a `surfScore` (0-10) and the
+ * `bestTimeWindow` that produced it. A day's score is its single best hour
+ * (highest score; ties keep the earlier hour), which reads truer to a surfer
+ * than a daily average. Days with no scoreable hour keep a `null` row so the
+ * strip still shows the calendar. Points with an unparseable `time` are skipped.
+ */
+export function scoreSurfByDay(
+	points: readonly SurfScoreTimedInput[],
+	config: SurfScoreConfig = DEFAULT_SURF_SCORE_CONFIG
+): DailySurfScore[] {
+	const days = new Map<string, DailySurfScore>();
+
+	for (const point of points) {
+		const date = utcDate(point.time);
+		if (!date) continue;
+
+		const result = scoreSurfComponents(point, config);
+		const existing = days.get(date);
+		if (result.score === null) {
+			if (!existing) {
+				days.set(date, { date, surfScore: null, bestTimeWindow: null, components: null });
+			}
+			continue;
+		}
+		if (!existing || existing.surfScore === null || result.score > existing.surfScore) {
+			days.set(date, {
+				date,
+				surfScore: result.score,
+				bestTimeWindow: point.time,
+				components: result.components
+			});
+		}
+	}
+
+	return [...days.values()].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+}

@@ -122,6 +122,9 @@ describe('buildGfsWaveForecast', () => {
 		expect(forecast.daily).toHaveLength(1);
 		expect(forecast.daily[0]).toMatchObject({ date: '2026-10-11', sampleCount: 4 });
 		expect(forecast.daily[0].maxWaveHeightM).toBeCloseTo(0.95, 6);
+		// The daily row carries the day's best derived surf score + window.
+		expect(forecast.daily[0].surfScore).toBeGreaterThan(0);
+		expect(forecast.daily[0].bestTimeWindow).toMatch(/^2026-10-11T\d{2}:00:00\.000Z$/);
 	});
 });
 

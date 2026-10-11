@@ -7,8 +7,10 @@ import {
 	DEFAULT_SURF_SCORE_CONFIG,
 	angleBetweenDeg,
 	scoreSurf,
+	scoreSurfByDay,
 	scoreSurfComponents,
-	type SurfScoreInput
+	type SurfScoreInput,
+	type SurfScoreTimedInput
 } from './surf-score';
 
 const FIXTURES = new URL('../../../fixtures/nomads/', import.meta.url);
@@ -137,6 +139,50 @@ describe('scoreSurf component math', () => {
 			scoreSurf(input({ tideHeightM: 1.0 }))!,
 			10
 		);
+	});
+});
+
+describe('scoreSurfByDay', () => {
+	function timed(time: string, overrides: Partial<SurfScoreInput> = {}): SurfScoreTimedInput {
+		return { ...input(overrides), time };
+	}
+
+	it('keeps the best-scoring hour per UTC day and its window', () => {
+		const days = scoreSurfByDay([
+			timed('2026-10-11T06:00:00Z', { swellHeightM: 0.5, swellPeriodS: 8 }),
+			timed('2026-10-11T18:00:00Z', { swellHeightM: 3, swellPeriodS: 18 }),
+			timed('2026-10-12T06:00:00Z', { swellHeightM: 2.5, swellPeriodS: 16 })
+		]);
+
+		expect(days.map((day) => day.date)).toEqual(['2026-10-11', '2026-10-12']);
+		// The bigger, longer-period evening hour wins the 11th.
+		expect(days[0].bestTimeWindow).toBe('2026-10-11T18:00:00Z');
+		expect(days[0].surfScore).toBeCloseTo(
+			scoreSurf(input({ swellHeightM: 3, swellPeriodS: 18 }))!,
+			10
+		);
+		expect(days[1].bestTimeWindow).toBe('2026-10-12T06:00:00Z');
+	});
+
+	it('keeps the earlier hour on a tie', () => {
+		const days = scoreSurfByDay([timed('2026-10-11T00:00:00Z'), timed('2026-10-11T12:00:00Z')]);
+		expect(days[0].bestTimeWindow).toBe('2026-10-11T00:00:00Z');
+	});
+
+	it('keeps a null row for a day with no scoreable hour and skips bad times', () => {
+		const days = scoreSurfByDay([
+			timed('2026-10-11T12:00:00Z', {
+				swellHeightM: null,
+				swellPeriodS: null,
+				swellDirectionDeg: null,
+				windSpeedMs: null,
+				windDirectionDeg: null
+			}),
+			timed('not-a-date')
+		]);
+		expect(days).toEqual([
+			{ date: '2026-10-11', surfScore: null, bestTimeWindow: null, components: null }
+		]);
 	});
 });
 

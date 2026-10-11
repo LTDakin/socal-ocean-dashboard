@@ -28,6 +28,7 @@ export {
 } from './gfswave';
 export type {
 	BuildForecastInput,
+	DailyWaveForecast,
 	GfsWaveAdapterOptions,
 	GfsWaveForecast,
 	GfsWaveSource,
@@ -98,6 +99,7 @@ export type {
 	SpotsOverviewData,
 	TidePreviewPoint
 } from './overview';
+export { mergeSourceRecords } from './sources';
 export {
 	buildCdipWaveUrl,
 	createCdipAdapter,

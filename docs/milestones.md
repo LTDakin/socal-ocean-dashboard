@@ -44,7 +44,8 @@ See [`plan-m1-grib2.md`](plan-m1-grib2.md).
 - [x] `GET /api/spot/[id]/forecast` green with provenance (`modelRun`, `asOf`).
 - [x] `lib/derive`: daily aggregations (`lib/derive/daily.ts`), Secchi depth
   (ZSD ≈ 1.44/Kd490) + rating bands (`clarity.ts`), and the surf score
-  (`surf-score.ts`). Not yet wired into the `daily[]` payload.
+  (`surf-score.ts`). The surf score is wired into the `daily[]` payload
+  (`surfScore` + `bestTimeWindow`, via `scoreSurfByDay`) at M4b.
 
 **DoD:** one live SoCal spot returns a full ~14-day forecast through the BFF;
 a fixture yields a deterministic score and ratings.
@@ -77,8 +78,9 @@ observed clarity + rating + `asOf`.
   spot cards (surf spots then dive spots), shared ECharts wrapper, chart/card
   loading/empty/stale states. (`GET /api/spots`; see
   [`plan-m4-dashboard.md`](plan-m4-dashboard.md).)
-- [ ] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
-  condition panel, provenance footer.
+- [x] Spot detail: wave/swell chart, tide curve, clarity card, surf-score strip,
+  condition panel, provenance footer. (`/spot/[id]`; see
+  [`plan-m4-detail.md`](plan-m4-detail.md).)
 - [ ] Attribution + safety disclaimers in the app footer (minimal about page).
 
 **DoD:** `/` lists spots with current snapshots; spot detail works for one spot

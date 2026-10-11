@@ -86,9 +86,11 @@ The core product. Both series for the full ~14-16 day window:
 - `hourly[]`: time, significant wave height, mean & peak period, mean
   direction, wind-wave height/period/direction, swell height/period/direction,
   water temp, ocean current velocity/direction, wind speed/direction.
-- `daily[]`: per-day aggregations (max wave height, dominant direction, max
-  peak period / swell components), plus derived `surfScore` (0-10) and
-  `bestTimeWindow`.
+- `daily[]`: per-day aggregations — `{ date, maxWaveHeightM,
+  dominantDirectionDeg, maxDominantPeriodS, maxSwellHeightM, swellPeriodS,
+  swellDirectionDeg, sampleCount }` — plus the derived `surfScore` (0-10, the
+  day's best hour, `null` when unscoreable) and `bestTimeWindow` (ISO instant of
+  that hour). Both are computed by `lib/derive` (`scoreSurfByDay`).
 
 ### `GET /api/spot/[id]/tides`
 CO-OPS predictions for the spot's tide station over the same window. `data.coops`

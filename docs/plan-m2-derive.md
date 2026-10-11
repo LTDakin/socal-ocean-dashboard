@@ -127,8 +127,10 @@ Deviations worth flagging:
 
 - **Tide component weighted `0`** by default — forward-compatible input, no
   effect until per-spot preferences + CO-OPS land (documented above).
-- **`surfScore`/`bestTimeWindow` not added to `daily[]` yet.** Kept standalone
-  per the todo's "separate from raw adapters" framing; see *Out of scope*.
+- **`surfScore`/`bestTimeWindow` were not added to `daily[]` yet.** Kept
+  standalone per the todo's "separate from raw adapters" framing; see *Out of
+  scope*. *(Subsequently wired at M4b via `scoreSurfByDay` —
+  `docs/plan-m4-detail.md`.)*
 - **`clarityRating` returns `null`** for unparseable/non-positive input rather
   than defaulting to `poor`, so a missing satellite pixel is never shown as bad
   water.

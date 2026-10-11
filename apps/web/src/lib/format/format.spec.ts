@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
 	NO_VALUE,
 	celsiusToFahrenheit,
+	formatClockTime,
+	formatDayLabel,
+	formatFullDate,
 	formatHeight,
 	formatRelativeTime,
 	formatSpeed,
@@ -93,6 +96,27 @@ describe('tideStateArrow', () => {
 		expect(tideStateArrow('falling')).toBe('↓');
 		expect(tideStateArrow('steady')).toBe('→');
 		expect(tideStateArrow(null)).toBe(NO_VALUE);
+	});
+});
+
+describe('day labels', () => {
+	it('formats a date bucket and an ISO instant in UTC', () => {
+		expect(formatDayLabel('2026-10-11')).toBe('Sun 11');
+		expect(formatDayLabel('2026-10-11T23:00:00Z')).toBe('Sun 11');
+		expect(formatFullDate('2026-10-11')).toBe('Sun Oct 11');
+	});
+
+	it('returns the no-value placeholder for bad input', () => {
+		expect(formatDayLabel(null)).toBe(NO_VALUE);
+		expect(formatFullDate('not-a-date')).toBe(NO_VALUE);
+	});
+});
+
+describe('formatClockTime', () => {
+	it('formats an ISO instant as UTC HH:MM', () => {
+		expect(formatClockTime('2026-10-11T18:00:00Z')).toBe('18:00');
+		expect(formatClockTime('2026-10-11T05:07:00Z')).toBe('05:07');
+		expect(formatClockTime(null)).toBe(NO_VALUE);
 	});
 });
 
