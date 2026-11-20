@@ -1,7 +1,5 @@
 # Docs Index
 
-Reading order for a new agent:
-
 1. **`architecture.md`** — what we're building and why it's shaped this way. Read first.
 2. **`data-sources.md`** — every upstream provider, its cadence, and its caveats. Read before writing any provider code.
 3. **`api-contracts.md`** — the normalized JSON contracts the frontend consumes. Source of truth for both backend and frontend work.
