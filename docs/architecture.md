@@ -50,7 +50,8 @@ busy public site makes only a handful of upstream calls per spot per day.
    single-field HTTP Range fetches). A single app-level seam
    (`apps/web/src/lib/grib2`) isolates it so provider adapters stay swappable.
    **Superseded:** the earlier plan to build an in-house, extractable TypeScript
-   codec (see [`grib2-library.md`](grib2-library.md), now historical). Revisit
+   codec (see [`lib/grib2/HISTORY.md`](../apps/web/src/lib/grib2/HISTORY.md), now
+   historical). Revisit
    only if gribberish proves insufficient for the GFS-Wave scope.
 5. **Cache in-process, Redis later.** A TTL map (`node-cache`-style) is enough
    for v1; Redis only if/when we run multiple instances.

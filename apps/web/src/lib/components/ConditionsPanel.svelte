@@ -7,7 +7,7 @@
 	 *
 	 * Each metric also gets a low→high range meter (`RangeMeter.svelte`) plus a
 	 * qualitative band, so a bare number reads as "kinda high swell" / "low wind"
-	 * without the reader knowing the units (`docs/plan-now-condition-scales.md`).
+	 * without the reader knowing the units (see this directory's `README.md`).
 	 */
 	import {
 		NO_VALUE,
