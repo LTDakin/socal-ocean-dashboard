@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { DATA_SOURCES, SAFETY_DISCLAIMER, SOFTWARE } from '../../lib/attribution';
-	import { clarityDotClass, noticeClass } from '../../lib/components/presentation';
+	import { clarityDotStyle, noticeClass } from '../../lib/components/presentation';
 	import {
 		CLARITY_BANDS,
 		DEFAULT_SURF_SCORE_CONFIG,
@@ -155,7 +155,8 @@
 						class="flex items-center gap-1.5 rounded-full border border-sea/25 bg-abyss/40 px-2 py-0.5"
 					>
 						<span
-							class="h-2 w-2 rounded-full {clarityDotClass(band.rating, activeTheme)}"
+							class="h-2 w-2 rounded-full"
+							style={clarityDotStyle(band.rating)}
 							aria-hidden="true"
 						></span>
 						<span class="text-foam/60 capitalize">{band.rating}</span>

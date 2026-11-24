@@ -22,7 +22,7 @@
 	import type { SpotOverview, TidePreviewPoint } from '../dashboard';
 	import { favorites } from '../stores/favorites.svelte';
 	import { preferences } from '../stores/preferences.svelte';
-	import { clarityBadgeClass, clarityDotClass, favoriteClass } from './presentation';
+	import { clarityBadgeStyle, clarityDotStyle, favoriteClass } from './presentation';
 
 	interface Props {
 		spot: SpotOverview;
@@ -116,16 +116,10 @@
 		{/if}
 		{#if spot.snapshot.clarityRating}
 			<span
-				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium {clarityBadgeClass(
-					spot.snapshot.clarityRating,
-					activeTheme
-				)}"
+				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+				style={clarityBadgeStyle(spot.snapshot.clarityRating)}
 			>
-				<span
-					class="h-1.5 w-1.5 rounded-full {clarityDotClass(
-						spot.snapshot.clarityRating,
-						activeTheme
-					)}"
+				<span class="h-1.5 w-1.5 rounded-full" style={clarityDotStyle(spot.snapshot.clarityRating)}
 				></span>
 				{titleCase(spot.snapshot.clarityRating)} visibility
 			</span>

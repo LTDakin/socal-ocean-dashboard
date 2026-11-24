@@ -3,51 +3,30 @@
  *
  * Clarity rating styles live here (not in each component) so `SpotCard` and
  * `ClarityCard` can't drift, and provider ids get human labels in one place.
- * Colors are chosen to stay legible without relying on red/green alone
- * (`docs/frontend.md` → accessibility).
+ * All bands use the same green→red ramp in both themes; badge text follows the
+ * active theme's foreground token, and the band label stays visible so color is
+ * never the only cue (`docs/frontend.md` → accessibility).
  */
 import type { ClarityRating } from '../derive';
+import { DATA_COLORS, withAlpha } from '../theme/data-colors';
 import type { Theme } from '../theme/palette';
 
-/** Dark rating pill background/text, keyed by band. */
-export const CLARITY_BADGE: Record<ClarityRating, string> = {
-	excellent: 'bg-cyan-400/15 text-cyan-100',
-	good: 'bg-sky-400/15 text-sky-100',
-	fair: 'bg-slate-400/20 text-slate-100',
-	poor: 'bg-amber-400/15 text-amber-100'
+/** Visibility ramp, green (excellent) → red (poor), keyed by band. */
+const CLARITY_COLORS: Record<ClarityRating, string> = {
+	excellent: DATA_COLORS.green,
+	good: DATA_COLORS.yellow,
+	fair: DATA_COLORS.orange,
+	poor: DATA_COLORS.red
 };
 
-/** Dark rating dot fill, keyed by band. */
-export const CLARITY_DOT: Record<ClarityRating, string> = {
-	excellent: 'bg-cyan-300',
-	good: 'bg-sky-300',
-	fair: 'bg-slate-300',
-	poor: 'bg-amber-300'
-};
-
-/** Light ratings stay black/gray; blue marks the best band. */
-const LIGHT_CLARITY_BADGE: Record<ClarityRating, string> = {
-	excellent: 'bg-surf/15 text-surf',
-	good: 'bg-sea/10 text-foam',
-	fair: 'bg-sea/10 text-foam/70',
-	poor: 'bg-sea/15 text-foam ring-1 ring-sea/40'
-};
-
-const LIGHT_CLARITY_DOT: Record<ClarityRating, string> = {
-	excellent: 'bg-surf',
-	good: 'bg-sea/60',
-	fair: 'bg-sea/35',
-	poor: 'bg-sea'
-};
-
-/** Rating pill classes for the active theme. */
-export function clarityBadgeClass(rating: ClarityRating, theme: Theme): string {
-	return theme === 'light' ? LIGHT_CLARITY_BADGE[rating] : CLARITY_BADGE[rating];
+/** Tinted pill style for a clarity band. */
+export function clarityBadgeStyle(rating: ClarityRating): string {
+	return `background-color: ${withAlpha(CLARITY_COLORS[rating], 0.15)}; color: var(--color-foam)`;
 }
 
-/** Rating dot classes for the active theme. */
-export function clarityDotClass(rating: ClarityRating, theme: Theme): string {
-	return theme === 'light' ? LIGHT_CLARITY_DOT[rating] : CLARITY_DOT[rating];
+/** Solid dot style for a clarity band. */
+export function clarityDotStyle(rating: ClarityRating): string {
+	return `background-color: ${CLARITY_COLORS[rating]}`;
 }
 
 /** Favorite star: amber in dark mode, the shared blue accent in light mode. */

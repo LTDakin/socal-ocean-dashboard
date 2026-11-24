@@ -8,6 +8,7 @@
  * red/green-only encoding (`docs/frontend.md` → accessibility), and the meter
  * always keeps its number and end labels.
  */
+import { DATA_COLORS } from '../theme/data-colors';
 
 /** The four metrics the "now" panel scales. */
 export type ScaleKey = 'waves' | 'waterTemp' | 'wind' | 'waterLevel';
@@ -47,20 +48,20 @@ export const SCALE_BOUNDS: Record<ScaleKey, MetricScale> = {
  */
 export const SCALE_THEMES: Record<ScaleKey, ScaleTheme> = {
 	waves: {
-		accent: '#4fb3d9',
-		track: 'linear-gradient(90deg, #2b6f8f 0%, #4fb3d9 55%, #9fe0f5 100%)'
+		accent: DATA_COLORS.cyan,
+		track: `linear-gradient(90deg, ${DATA_COLORS.blueDark} 0%, ${DATA_COLORS.cyan} 55%, ${DATA_COLORS.cyanPale} 100%)`
 	},
 	waterTemp: {
-		accent: '#ffb56b',
-		track: 'linear-gradient(90deg, #4f9fe0 0%, #7fd0c0 38%, #ffd479 68%, #ff9e5e 100%)'
+		accent: DATA_COLORS.orangeLight,
+		track: `linear-gradient(90deg, ${DATA_COLORS.blue} 0%, ${DATA_COLORS.green} 38%, ${DATA_COLORS.yellow} 68%, ${DATA_COLORS.orange} 100%)`
 	},
 	wind: {
-		accent: '#ffd479',
-		track: 'linear-gradient(90deg, #7fe0c8 0%, #b8dc8a 45%, #ffd479 75%, #ff9e5e 100%)'
+		accent: DATA_COLORS.yellow,
+		track: `linear-gradient(90deg, ${DATA_COLORS.mint} 0%, ${DATA_COLORS.lime} 45%, ${DATA_COLORS.yellow} 75%, ${DATA_COLORS.orange} 100%)`
 	},
 	waterLevel: {
-		accent: '#8b9ff0',
-		track: 'linear-gradient(90deg, #3d5a9e 0%, #6b7fd7 55%, #a9baf5 100%)'
+		accent: DATA_COLORS.indigoLight,
+		track: `linear-gradient(90deg, ${DATA_COLORS.indigoDark} 0%, ${DATA_COLORS.indigo} 55%, ${DATA_COLORS.indigoPale} 100%)`
 	}
 };
 

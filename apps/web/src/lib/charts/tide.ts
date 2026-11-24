@@ -13,12 +13,13 @@ import {
 	type Units
 } from '../format';
 import type { TidePreviewPoint } from '../dashboard';
+import { DATA_COLORS, withAlpha } from '../theme/data-colors';
 
-const LINE_COLOR = '#4fb3d9';
-const HIGH_COLOR = '#e6f4fa';
-const LOW_COLOR = '#7fb3c9';
-const AXIS_COLOR = 'rgba(230, 244, 250, 0.35)';
-const LABEL_COLOR = '#a9c7d6';
+const LINE_COLOR = DATA_COLORS.cyan;
+const HIGH_COLOR = DATA_COLORS.chartText;
+const LOW_COLOR = DATA_COLORS.cyanMuted;
+const AXIS_COLOR = withAlpha(DATA_COLORS.chartText, 0.35);
+const LABEL_COLOR = DATA_COLORS.chartLabel;
 
 /** Build the sparkline option for a decimated tide preview (`TidePreviewPoint[]`). */
 export function buildTideSparklineOption(
@@ -40,10 +41,10 @@ export function buildTideSparklineOption(
 		yAxis: { type: 'value', show: false, scale: true },
 		tooltip: {
 			trigger: 'axis',
-			backgroundColor: 'rgba(4, 18, 31, 0.94)',
-			borderColor: 'rgba(79, 179, 217, 0.35)',
+			backgroundColor: withAlpha(DATA_COLORS.chartSurface, 0.94),
+			borderColor: withAlpha(DATA_COLORS.cyan, 0.35),
 			borderWidth: 1,
-			textStyle: { color: '#e6f4fa', fontSize: 11 },
+			textStyle: { color: DATA_COLORS.chartText, fontSize: 11 },
 			formatter: (params: unknown): string => {
 				const first = (Array.isArray(params) ? params[0] : params) as
 					{ value?: unknown } | undefined;
@@ -61,7 +62,7 @@ export function buildTideSparklineOption(
 				showSymbol: false,
 				smooth: 0.35,
 				lineStyle: { width: 2, color: LINE_COLOR },
-				areaStyle: { color: 'rgba(79, 179, 217, 0.18)' },
+				areaStyle: { color: withAlpha(DATA_COLORS.cyan, 0.18) },
 				markPoint: {
 					symbol: 'circle',
 					symbolSize: 5,
@@ -97,10 +98,10 @@ export function buildTideCurveOption(
 		grid: { left: 8, right: 12, top: 12, bottom: 4, containLabel: true },
 		tooltip: {
 			trigger: 'axis',
-			backgroundColor: 'rgba(4, 18, 31, 0.94)',
-			borderColor: 'rgba(79, 179, 217, 0.35)',
+			backgroundColor: withAlpha(DATA_COLORS.chartSurface, 0.94),
+			borderColor: withAlpha(DATA_COLORS.cyan, 0.35),
 			borderWidth: 1,
-			textStyle: { color: '#e6f4fa', fontSize: 11 },
+			textStyle: { color: DATA_COLORS.chartText, fontSize: 11 },
 			formatter: (params: unknown): string => {
 				const first = (Array.isArray(params) ? params[0] : params) as
 					{ value?: unknown } | undefined;
@@ -131,7 +132,7 @@ export function buildTideCurveOption(
 			scale: true,
 			name: units === 'imperial' ? 'ft' : 'm',
 			nameTextStyle: { color: LABEL_COLOR, fontSize: 10 },
-			splitLine: { lineStyle: { color: 'rgba(230, 244, 250, 0.08)' } },
+			splitLine: { lineStyle: { color: withAlpha(DATA_COLORS.chartText, 0.08) } },
 			axisLabel: { color: LABEL_COLOR, fontSize: 10 }
 		},
 		series: [
@@ -141,7 +142,7 @@ export function buildTideCurveOption(
 				showSymbol: false,
 				smooth: 0.35,
 				lineStyle: { width: 2, color: LINE_COLOR },
-				areaStyle: { color: 'rgba(79, 179, 217, 0.18)' },
+				areaStyle: { color: withAlpha(DATA_COLORS.cyan, 0.18) },
 				markPoint: {
 					symbol: 'circle',
 					symbolSize: 6,
