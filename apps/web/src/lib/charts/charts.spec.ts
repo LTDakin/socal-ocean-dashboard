@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { DailyWaveForecast } from '../providers/gfswave';
-import type { TidePreviewPoint } from '../providers/overview';
+import type { DailyWaveForecast } from '../../server/providers/gfswave';
+import type { TidePreviewPoint } from '../dashboard';
 import { buildTideCurveOption } from './tide';
 import { buildWaveForecastOption } from './wave';
 

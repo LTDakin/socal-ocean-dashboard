@@ -13,7 +13,7 @@ import {
 	formatRelativeTime,
 	type Units
 } from '../format';
-import type { TidePreviewPoint } from '../providers/overview';
+import type { TidePreviewPoint } from '../dashboard';
 
 const LINE_COLOR = '#4fb3d9';
 const HIGH_COLOR = '#e6f4fa';

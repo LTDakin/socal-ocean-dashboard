@@ -15,7 +15,7 @@ import {
 	ordinalDirection,
 	type Units
 } from '../format';
-import type { DailyWaveForecast } from '../providers/gfswave';
+import type { DailyWaveForecast } from '../../server/providers/gfswave';
 
 const WAVE_COLOR = '#4fb3d9';
 const SWELL_COLOR = '#8fd0e8';

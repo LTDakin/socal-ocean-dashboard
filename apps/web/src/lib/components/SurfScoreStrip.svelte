@@ -9,7 +9,7 @@
 	 * is always shown, so color is never the only encoding.
 	 */
 	import { formatClockTime, formatDayLabel, formatFullDate, NO_VALUE } from '../format';
-	import type { DailyWaveForecast } from '../providers/gfswave';
+	import type { DailyWaveForecast } from '../../server/providers/gfswave';
 
 	interface Props {
 		daily: DailyWaveForecast[];

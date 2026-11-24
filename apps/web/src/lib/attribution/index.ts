@@ -31,7 +31,7 @@ export interface DataSourceCredit {
 
 /**
  * Every upstream behind a number on screen. Order is the display order on
- * `/about`; `providers` maps each to the envelope ids in `lib/providers`.
+ * `/about`; `providers` maps each to the envelope ids in `server/providers`.
  */
 export const DATA_SOURCES: readonly DataSourceCredit[] = [
 	{

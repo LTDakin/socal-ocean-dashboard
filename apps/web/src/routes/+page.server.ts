@@ -1,4 +1,4 @@
-import type { SpotsOverviewEnvelope } from '../lib/providers';
+import type { SpotsOverviewEnvelope } from '../server/providers';
 import type { PageServerLoad } from './$types';
 
 /**

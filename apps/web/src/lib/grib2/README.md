@@ -12,24 +12,27 @@ single-field HTTP Range fetches).
 
 ## API
 
-| Export                                          | Purpose                                                  |
-| ----------------------------------------------- | -------------------------------------------------------- |
-| `inspectFields(bytes)`                          | Metadata-only scan of every message (cheap field index). |
-| `decodeFields(bytes)`                           | Decode all messages → `GribField[]`.                     |
-| `decodeField(bytes)`                            | Decode a single HTTP-Range-fetched message.              |
-| `selectField(fields, { var, occurrence? })`     | Pick one field by abbreviation.                          |
-| `sampleField(field, lat, lon)`                  | Nearest regular-grid value (nulls where masked).         |
-| `parseFieldIndex(text, fileSize?)`              | Parse a wgrib2 `.idx` / ECMWF `.index` sidecar.          |
-| `selectIndexEntry` / `byteRange`                | Resolve one message's `Range` request.                   |
-| `buildNomadsWaveUrl` / `buildNomadsWaveFileUrl` | NOMADS Grib Filter / direct-file URLs.                   |
-| `fetchSubsetFields` / `fetchIndexedField`       | Fetch+decode a subset, or one field by Range.            |
+| Export                                      | Purpose                                                  |
+| ------------------------------------------- | -------------------------------------------------------- |
+| `inspectFields(bytes)`                      | Metadata-only scan of every message (cheap field index). |
+| `decodeFields(bytes)`                       | Decode all messages → `GribField[]`.                     |
+| `decodeField(bytes)`                        | Decode a single HTTP-Range-fetched message.              |
+| `selectField(fields, { var, occurrence? })` | Pick one field by abbreviation.                          |
+| `sampleField(field, lat, lon)`              | Nearest regular-grid value (nulls where masked).         |
+| `parseFieldIndex(text, fileSize?)`          | Parse a wgrib2 `.idx` / ECMWF `.index` sidecar.          |
+| `selectIndexEntry` / `byteRange`            | Resolve one message's `Range` request.                   |
+
+NOMADS URL building and upstream fetching live in
+[`server/nomads`](../../server/nomads/README.md), which imports this seam; keeping
+them out of `lib/` means no client-reachable module can call upstream.
 
 `validTime` is the forecast instant; `modelRun` is the reference/initialization
 time. Row-major values use `null` for bitmap-masked points (land / out-of-domain),
-and longitudes are normalized to `[-180, 180)`. Decode/fetch failures throw
-`Grib2DecodeError` / `Grib2FetchError` rather than surfacing as NaN.
+and longitudes are normalized to `[-180, 180)`. Decode failures throw
+`Grib2DecodeError` (fetch failures in `server/nomads` throw `Grib2FetchError`)
+rather than surfacing as NaN.
 
 Golden tests decode the committed fixtures in
 [`apps/web/fixtures/nomads/`](../../../fixtures/README.md) (HTSGW = 0.95 m at La
 Jolla in both the simple-packed subset and the JPEG2000 full field). The GFS-Wave
-adapter lives in [`../providers/gfswave.ts`](../providers/gfswave.ts).
+adapter lives in [`../../server/providers/gfswave.ts`](../../server/providers/gfswave.ts).

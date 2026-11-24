@@ -22,7 +22,11 @@
 		titleCase,
 		type Units
 	} from '../format';
-	import type { CurrentConditions, CurrentField, FieldProvenance } from '../providers/current';
+	import type {
+		CurrentConditions,
+		CurrentField,
+		FieldProvenance
+	} from '../../server/providers/current';
 	import RangeMeter from './RangeMeter.svelte';
 	import { providerLabel } from './presentation';
 	import {

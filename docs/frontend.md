@@ -61,7 +61,7 @@ cases (the `boat` type and the boat-only harbor spots were dropped).
 - **Empty/loading/stale states:** every chart/card renders a deliberate
   loading, empty, or "stale as of …" state (never a blank pane).
 - **List ordering:** the dashboard never sorts flat A–Z. Favorites pin first,
-  then `compareSpotsByInfo` (`lib/providers/overview.ts`) surfaces spots with
+  then `compareSpotsByInfo` (`lib/dashboard/spot-ranking.ts`) surfaces spots with
   real data and pushes unobserved/sparse spots to the bottom, with the name as
   the final tiebreak.
 - **Styling:** Tailwind with a small design-token layer (ocean palette, type

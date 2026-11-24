@@ -50,7 +50,7 @@ mirrors the `/current` adapter's short lookback window query.
 
 The realtime2 files are trimmed to the first ~10 hours of rows (upstream keeps 45
 days). `activestations.socal.json` is the evidence for the CDIP→NDBC twin table in
-`lib/providers/ndbc.ts`: NDBC puts the partner CDIP station id in the name, e.g.
+`server/providers/ndbc.ts`: NDBC puts the partner CDIP station id in the name, e.g.
 `"SCRIPPS Nearshore, CA (201)"` → `46254`.
 
 ## `coastwatch/` — VIIRS Kd490 clarity
@@ -83,7 +83,7 @@ curve, `interval=hilo` the high/low events it merges in. `date=today` is
 day-granular and can't cover a 14-day window, so the adapter uses
 `begin_date`/`end_date` (up to 1 year). The `water_level` range and the
 `date=latest` water-temperature/wind snapshots exercise the `/current`
-observations adapter (`src/lib/providers/coops-obs.ts`).
+observations adapter (`src/server/providers/coops-obs.ts`).
 
 ## Adding fixtures
 

@@ -19,6 +19,7 @@ functions live beside that module (see the co-located list below).
 ## Co-located docs
 
 - [`lib/grib2/README.md`](../apps/web/src/lib/grib2/README.md) — GRIB2 decode seam; [`HISTORY.md`](../apps/web/src/lib/grib2/HISTORY.md) — superseded in-house codec plan.
+- [`server/nomads/README.md`](../apps/web/src/server/nomads/README.md) — NOMADS URL builders and upstream fetchers.
 - [`lib/components/README.md`](../apps/web/src/lib/components/README.md) — "now" panel scales and range meters.
 - [`fixtures/README.md`](../apps/web/fixtures/README.md) — provenance of every committed upstream sample.
 

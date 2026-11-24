@@ -15,7 +15,7 @@
    "Decisions already made" item, or needs credentials/accounts, ask before
    proceeding. Otherwise, when you are set on a todo, start building.
 4. **Provider adapters are swappable.** All upstream data access goes through
-   the adapter interface in `apps/web/src/lib/providers`. Never call upstream
+   the adapter interface in `apps/web/src/server/providers`. Never call upstream
    services directly from client code; never hard-code provider specifics in
    components.
 5. **GRIB2 library stays generic.** `packages/grib2` must contain only GRIB2

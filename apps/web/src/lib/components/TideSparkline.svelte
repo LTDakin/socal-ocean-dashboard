@@ -6,7 +6,7 @@
 	 */
 	import { buildTideSparklineOption } from '../charts/tide';
 	import type { Units } from '../format';
-	import type { TidePreviewPoint } from '../providers/overview';
+	import type { TidePreviewPoint } from '../dashboard';
 	import Chart from './Chart.svelte';
 
 	interface Props {

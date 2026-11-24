@@ -54,7 +54,7 @@ Full design: [`docs/architecture.md`](docs/architecture.md).
 ### Data sources
 
 NOAA-primary and public domain, so there are no API keys or license cliffs.
-Provider adapters are swappable and live in `apps/web/src/lib/providers`; nothing
+Provider adapters are swappable and live in `apps/web/src/server/providers`; nothing
 else ever calls upstream directly.
 
 | Source                  | Provides                                                 |
@@ -101,10 +101,13 @@ socal-ocean-dashboard/
       fixtures/           # real (small) upstream samples for golden tests
       src/
         routes/           # pages, +page.server.ts loaders, /api endpoints
-        lib/
+        server/
           providers/      # adapters: gfswave, cdip, coops(+obs), ndbc, coastwatch
-          grib2/          # GRIB2 decode seam (wraps @mattnucc/gribberish)
+          nomads/         # NOMADS URL builders + upstream GRIB2 fetchers
           cache/          # in-process TTL cache
+        lib/
+          dashboard/      # client-safe wire types + pure tide/spot helpers
+          grib2/          # GRIB2 decode seam (wraps @mattnucc/gribberish)
           async/          # single-flight dedup, map-limit
           derive/         # surf score, visibility rating, daily aggregates
           spots/          # curated spot list + station linkage (spots.json)

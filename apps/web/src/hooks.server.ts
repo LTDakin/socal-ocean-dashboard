@@ -1,5 +1,5 @@
 import { dev } from '$app/env';
-import { prewarmProviderCache } from './lib/providers/prewarm';
+import { prewarmProviderCache } from './server/providers/prewarm';
 
 /**
  * `hooks.server.ts` — pre-warm the provider cache at boot (see

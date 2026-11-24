@@ -67,10 +67,13 @@ socal-ocean-dashboard/
       fixtures/       # small real NOMADS samples for golden tests
       src/
         routes/       # pages + +page.server.ts loaders + /api endpoints
-        lib/
+        server/
           providers/  # adapters: gfswave, cdip, coops, ndbc, coastwatch
+          nomads/     # NOMADS URL builders + upstream GRIB2 fetchers
+          cache/      # in-process TTL cache
+        lib/
+          dashboard/  # client-safe wire types + pure tide/spot helpers
           grib2/      # GRIB2 decode seam (wraps @mattnucc/gribberish)
-          cache/
           derive/     # surf score, visibility rating, daily aggregates
           spots/      # curated SoCal spot list + station linkage
           components/

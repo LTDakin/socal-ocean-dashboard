@@ -2,7 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import SpotCard from '../lib/components/SpotCard.svelte';
 	import { formatRelativeTime, regionLabel } from '../lib/format';
-	import { compareSpotsByInfo, type SpotOverview } from '../lib/providers/overview';
+	import { compareSpotsByInfo, type SpotOverview } from '../lib/dashboard';
 	import type { SpotType } from '../lib/spots';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import type { PageProps } from './$types';
