@@ -126,10 +126,10 @@
 
 	{#if spot.tide && spot.tide.preview.length > 0}
 		<div class="min-h-14">
+			<p class="mt-1 text-[11px] text-foam/50">{nextTideLabel}</p>
 			{#if TideSparkline}
 				<TideSparkline points={spot.tide.preview} {units} />
 			{/if}
-			<p class="mt-1 text-[11px] text-foam/50">Next tide: {nextTideLabel}</p>
 		</div>
 	{:else}
 		<p class="text-[11px] text-foam/40">No tide data</p>

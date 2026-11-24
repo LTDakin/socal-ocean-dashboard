@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { DailyWaveForecast } from '../../server/providers/gfswave';
 import type { TidePreviewPoint } from '../dashboard';
-import { buildTideCurveOption } from './tide';
+import { buildTideCurveOption, buildTideSparklineOption } from './tide';
 import { buildWaveForecastOption } from './wave';
 
 interface TooltipShape {
@@ -56,6 +56,22 @@ describe('buildWaveForecastOption', () => {
 		expect(html).toContain('Period 14 s');
 		expect(html).toContain('Direction W');
 		expect(html).toContain('Surf score 6.4/10');
+	});
+});
+
+describe('buildTideSparklineOption', () => {
+	const points: TidePreviewPoint[] = [
+		{ time: '2026-10-11T06:00:00.000Z', heightM: 1.5, highLow: 'high' }
+	];
+
+	it('shows an explicit clock time in the tooltip instead of a relative offset', () => {
+		const option = buildTideSparklineOption(points, 'imperial') as { tooltip: TooltipShape };
+		const value = [Date.parse('2026-10-11T06:00:00.000Z'), 1.5];
+		const html = option.tooltip.formatter([{ value }]);
+
+		expect(html).toContain('Sun 11 06:00');
+		expect(html).toContain('4.9 ft');
+		expect(html).not.toMatch(/in \d+ hr/);
 	});
 });
 

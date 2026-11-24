@@ -10,7 +10,6 @@ import {
 	formatDayLabel,
 	formatFullDate,
 	formatHeight,
-	formatRelativeTime,
 	type Units
 } from '../format';
 import type { TidePreviewPoint } from '../dashboard';
@@ -51,7 +50,8 @@ export function buildTideSparklineOption(
 				const value = Array.isArray(first?.value) ? first.value : undefined;
 				if (!value) return '';
 				const [time, height] = value as [number, number];
-				return `${formatRelativeTime(new Date(time).toISOString())} · ${formatHeight(height, units)}`;
+				const iso = new Date(time).toISOString();
+				return `${formatDayLabel(iso)} ${formatClockTime(iso)} · ${formatHeight(height, units)}`;
 			}
 		},
 		series: [
