@@ -22,7 +22,7 @@
 	import type { SpotOverview, TidePreviewPoint } from '../dashboard';
 	import { favorites } from '../stores/favorites.svelte';
 	import { preferences } from '../stores/preferences.svelte';
-	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';
+	import { clarityBadgeClass, clarityDotClass, favoriteClass } from './presentation';
 
 	interface Props {
 		spot: SpotOverview;
@@ -41,6 +41,7 @@
 	});
 
 	const units = $derived<Units>(preferences.units);
+	const activeTheme = $derived(preferences.theme);
 	const favorite = $derived(favorites.has(spot.id));
 
 	const nextTide = $derived(
@@ -79,9 +80,10 @@
 		</div>
 		<button
 			type="button"
-			class="relative z-10 -m-1 rounded-md p-1 text-lg leading-none transition hover:text-amber-200 {favorite
-				? 'text-amber-300'
-				: 'text-foam/35'}"
+			class="relative z-10 -m-1 rounded-md p-1 text-lg leading-none transition {favoriteClass(
+				favorite,
+				activeTheme
+			)}"
 			aria-pressed={favorite}
 			aria-label={favorite ? `Remove ${spot.name} from favorites` : `Add ${spot.name} to favorites`}
 			onclick={() => favorites.toggle(spot.id)}
@@ -114,11 +116,17 @@
 		{/if}
 		{#if spot.snapshot.clarityRating}
 			<span
-				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium {CLARITY_BADGE[
-					spot.snapshot.clarityRating
-				]}"
+				class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium {clarityBadgeClass(
+					spot.snapshot.clarityRating,
+					activeTheme
+				)}"
 			>
-				<span class="h-1.5 w-1.5 rounded-full {CLARITY_DOT[spot.snapshot.clarityRating]}"></span>
+				<span
+					class="h-1.5 w-1.5 rounded-full {clarityDotClass(
+						spot.snapshot.clarityRating,
+						activeTheme
+					)}"
+				></span>
 				{titleCase(spot.snapshot.clarityRating)} visibility
 			</span>
 		{/if}

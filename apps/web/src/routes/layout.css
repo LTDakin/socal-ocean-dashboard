@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
-/* Ocean design tokens — dark-mode-first (see docs/frontend.md). */
+/* Ocean design tokens. These dark values are the SSR/no-JS fallback; once the
+ * saved preference is known, applyTheme() overrides them for light mode. */
 @theme {
 	--color-abyss: #04121f;
 	--color-deep: #0a2540;
@@ -14,6 +15,14 @@
 
 html {
 	color-scheme: dark;
+}
+
+html[data-theme='light'] {
+	color-scheme: light;
+}
+
+html[data-theme='light'] body {
+	background-image: none;
 }
 
 body {

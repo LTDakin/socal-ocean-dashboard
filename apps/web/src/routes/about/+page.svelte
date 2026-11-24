@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { DATA_SOURCES, SAFETY_DISCLAIMER, SOFTWARE } from '../../lib/attribution';
-	import { CLARITY_DOT } from '../../lib/components/presentation';
+	import { clarityDotClass, noticeClass } from '../../lib/components/presentation';
 	import {
 		CLARITY_BANDS,
 		DEFAULT_SURF_SCORE_CONFIG,
 		SECCHI_KD_COEFFICIENT
 	} from '../../lib/derive';
+	import { preferences } from '../../lib/stores/preferences.svelte';
+
+	const activeTheme = $derived(preferences.theme);
 
 	const card = 'rounded-xl border border-sea/25 bg-deep/40 p-4';
 	const heading = 'text-sm font-semibold tracking-wide text-foam/50 uppercase';
@@ -78,11 +81,15 @@
 		</p>
 	</header>
 
-	<section class="rounded-xl border border-amber-300/30 bg-amber-400/10 p-4">
-		<h2 class="text-sm font-semibold tracking-wide text-amber-100 uppercase">
-			Don't bet your life on it
-		</h2>
-		<p class="mt-2 text-sm leading-relaxed text-amber-100/90">{SAFETY_DISCLAIMER}</p>
+	<section class="rounded-xl border p-4 {noticeClass(activeTheme)}">
+		<h2 class="text-sm font-semibold tracking-wide uppercase">Don't bet your life on it</h2>
+		<p
+			class="mt-2 text-sm leading-relaxed {activeTheme === 'light'
+				? 'text-foam/80'
+				: 'text-amber-100/90'}"
+		>
+			{SAFETY_DISCLAIMER}
+		</p>
 	</section>
 
 	<section class="flex flex-col gap-3">
@@ -147,7 +154,10 @@
 					<li
 						class="flex items-center gap-1.5 rounded-full border border-sea/25 bg-abyss/40 px-2 py-0.5"
 					>
-						<span class="h-2 w-2 rounded-full {CLARITY_DOT[band.rating]}" aria-hidden="true"></span>
+						<span
+							class="h-2 w-2 rounded-full {clarityDotClass(band.rating, activeTheme)}"
+							aria-hidden="true"
+						></span>
 						<span class="text-foam/60 capitalize">{band.rating}</span>
 						<span class="font-mono text-foam/45">{band.label}</span>
 					</li>

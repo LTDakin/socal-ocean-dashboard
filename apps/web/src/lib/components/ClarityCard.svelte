@@ -6,8 +6,9 @@
 	 * lags by 2-3 days and is frequently cloud-blocked.
 	 */
 	import { formatHeight, formatRelativeTime, titleCase, type Units } from '../format';
+	import { preferences } from '../stores/preferences.svelte';
 	import type { ClarityObservation } from '../../server/providers/coastwatch';
-	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';
+	import { clarityBadgeClass, clarityDotClass } from './presentation';
 
 	interface Props {
 		clarity: ClarityObservation | null;
@@ -18,6 +19,7 @@
 
 	let { clarity, now, units }: Props = $props();
 
+	const activeTheme = $derived(preferences.theme);
 	const observed = $derived(Boolean(clarity?.observedAt && clarity.rating));
 </script>
 
@@ -30,11 +32,12 @@
 	{#if clarity && observed}
 		<div class="flex flex-wrap items-center gap-3">
 			<span
-				class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium {CLARITY_BADGE[
-					clarity.rating!
-				]}"
+				class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium {clarityBadgeClass(
+					clarity.rating!,
+					activeTheme
+				)}"
 			>
-				<span class="h-2 w-2 rounded-full {CLARITY_DOT[clarity.rating!]}"></span>
+				<span class="h-2 w-2 rounded-full {clarityDotClass(clarity.rating!, activeTheme)}"></span>
 				{titleCase(clarity.rating)}
 			</span>
 			<p class="text-lg font-semibold text-foam">

@@ -5,6 +5,7 @@
 	import { SHORT_DISCLAIMER, sourceNames } from '../lib/attribution';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import { preferences } from '../lib/stores/preferences.svelte';
+	import { applyTheme } from '../lib/theme/palette';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -15,6 +16,8 @@
 		favorites.hydrate();
 		preferences.hydrate();
 	});
+
+	$effect(() => applyTheme(preferences.theme));
 
 	const navLink = 'rounded-md px-3 py-1.5 text-foam/70 transition hover:bg-sea/20 hover:text-foam';
 </script>
@@ -34,6 +37,14 @@
 					onclick={() => preferences.toggle()}
 				>
 					{preferences.units === 'imperial' ? 'ft · °F' : 'm · °C'}
+				</button>
+				<button
+					type="button"
+					class={navLink}
+					aria-label={`Switch to ${preferences.theme === 'dark' ? 'light' : 'dark'} theme`}
+					onclick={() => preferences.toggleTheme()}
+				>
+					{preferences.theme === 'dark' ? 'Light' : 'Dark'}
 				</button>
 				<a href={resolve('/about')} class={navLink}>About</a>
 			</nav>
