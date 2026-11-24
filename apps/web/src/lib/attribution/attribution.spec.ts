@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { CDIP_PROVIDER_ID } from '../providers/cdip';
-import { COASTWATCH_PROVIDER_ID } from '../providers/coastwatch';
-import { COOPS_PROVIDER_ID } from '../providers/coops';
-import { COOPS_OBS_PROVIDER_ID } from '../providers/coops-obs';
-import { GFSWAVE_PROVIDER_ID } from '../providers/gfswave';
-import { NDBC_PROVIDER_ID } from '../providers/ndbc';
+import { CDIP_PROVIDER_ID } from '../../server/providers/cdip';
+import { COASTWATCH_PROVIDER_ID } from '../../server/providers/coastwatch';
+import { COOPS_PROVIDER_ID } from '../../server/providers/coops';
+import { COOPS_OBS_PROVIDER_ID } from '../../server/providers/coops-obs';
+import { GFSWAVE_PROVIDER_ID } from '../../server/providers/gfswave';
+import { NDBC_PROVIDER_ID } from '../../server/providers/ndbc';
 import {
 	creditedProviders,
 	creditForProvider,

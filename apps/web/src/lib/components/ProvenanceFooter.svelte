@@ -6,7 +6,7 @@
 	 */
 	import { formatRelativeTime } from '../format';
 	import { SHORT_DISCLAIMER } from '../attribution';
-	import type { SourceRecord } from '../providers/types';
+	import type { SourceRecord } from '../../server/providers/types';
 	import { providerLabel } from './presentation';
 
 	interface Props {

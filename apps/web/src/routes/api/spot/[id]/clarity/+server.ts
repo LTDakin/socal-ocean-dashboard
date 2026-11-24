@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { getSpot } from '../../../../../lib/spots';
-import { getSpotClarity, ProviderError, toErrorEnvelope } from '../../../../../lib/providers';
+import { getSpotClarity, ProviderError, toErrorEnvelope } from '../../../../../server/providers';
 import type { RequestHandler } from './$types';
 
 /**

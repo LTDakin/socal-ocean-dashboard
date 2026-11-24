@@ -25,8 +25,8 @@ SWELL{1,2,3}, SWPER{1,2,3}, SWDIR{1,2,3}`.
 **Cross-check:** `HTSGW` at the La Jolla grid point (32.83°N, 117.33°W) decodes
 to **0.95 m** in _both_ files. The nearest CDIP buoy (station 201, Scripps
 Nearshore) reported `waveHs` **0.75 m** at 2026-10-11 07:00Z — same regime,
-confirming the fixture is real and sane. The golden test for M1 should pin these
-decode values (see `docs/milestones.md`).
+confirming the fixture is real and sane. The golden tests pin this decode value
+in `src/lib/grib2/grib2.spec.ts`.
 
 ## `cdip/` — CDIP buoy observations
 
@@ -50,7 +50,7 @@ mirrors the `/current` adapter's short lookback window query.
 
 The realtime2 files are trimmed to the first ~10 hours of rows (upstream keeps 45
 days). `activestations.socal.json` is the evidence for the CDIP→NDBC twin table in
-`lib/providers/ndbc.ts`: NDBC puts the partner CDIP station id in the name, e.g.
+`server/providers/ndbc.ts`: NDBC puts the partner CDIP station id in the name, e.g.
 `"SCRIPPS Nearshore, CA (201)"` → `46254`.
 
 ## `coastwatch/` — VIIRS Kd490 clarity
@@ -83,7 +83,7 @@ curve, `interval=hilo` the high/low events it merges in. `date=today` is
 day-granular and can't cover a 14-day window, so the adapter uses
 `begin_date`/`end_date` (up to 1 year). The `water_level` range and the
 `date=latest` water-temperature/wind snapshots exercise the `/current`
-observations adapter (see `docs/plan-m3-observations.md`).
+observations adapter (`src/server/providers/coops-obs.ts`).
 
 ## Adding fixtures
 

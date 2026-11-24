@@ -1,41 +1,28 @@
 # Docs Index
 
-1. **`architecture.md`** — what we're building and why it's shaped this way. Read first.
-2. **`data-sources.md`** — every upstream provider, its cadence, and its caveats. Read before writing any provider code.
-3. **`api-contracts.md`** — the normalized JSON contracts the frontend consumes. Source of truth for both backend and frontend work.
-4. **`grib2-library.md`** — historical: the earlier in-house GRIB2 codec plan (superseded — we now use `@mattnucc/gribberish`).
-5. **`frontend.md`** — pages, components, charting, map, styling.
-6. **`milestones.md`** — phased MVP build order with definitions of done.
-7. **`plan-m0-scaffold.md`** — the M0 scaffold implementation plan (build-vs-buy decision, DoD, verification).
-8. **`plan-m0-spots.md`** — the seed spot list plan.
-9. **`plan-m0-providers.md`** — the provider adapter + cache foundation (BFF core) plan.
-10. **`plan-m1-grib2.md`** — the GRIB2 decode seam (`lib/grib2`) plan.
-11. **`plan-m2-gfswave.md`** — the GFS-Wave adapter + `/forecast` endpoint plan.
-12. **`plan-m2-derive.md`** — the derived-metrics (`lib/derive`) plan: Secchi rating bands + surf score.
-13. **`plan-m3-tides.md`** — the CO-OPS tides service + `/tides` endpoint plan.
-14. **`plan-m3-observations.md`** — the real-time observations service
-    (CDIP + NDBC gap-fill + CO-OPS observations) + `/current` endpoint plan.
-15. **`plan-m3-clarity.md`** — the CoastWatch VIIRS Kd490 clarity service +
-    `/clarity` endpoint plan.
-16. **`plan-m4-dashboard.md`** — the app shell + dashboard plan (`/api/spots`
-    list endpoint, favorites, shared ECharts wrapper).
-17. **`plan-m4-detail.md`** — the spot detail page plan (conditions panel,
-    14-day wave/swell chart, surf-score strip, tide curve, clarity card,
-    provenance footer; wires `surfScore`/`bestTimeWindow` into `daily[]`).
-18. **`plan-m4-attribution.md`** — the attribution / safety-disclaimer plan
-    (shared `lib/attribution` credits + the `/about` methodology page).
-19. **`plan-perf-initial-load.md`** — the initial-load performance plan
-    (cold-cache diagnosis; boot pre-warm, cycle-scoped GRIB field cache,
-    single-flight dedup; streamed spot detail).
-20. **`plan-dashboard-activity-toggle.md`** — the dashboard surf/dive activity
-    toggle + information-first spot ordering.
-21. **`plan-now-condition-scales.md`** — the "now" panel low→high range meters
-    (waves / water temp / wind / water level) + qualitative bands.
+Whole-project and cross-cutting docs live here. Docs that describe one module's
+functions live beside that module (see the co-located list below).
 
-## Using status markers
+## Reading order
 
-Docs use these check markers:
+1. **[`architecture.md`](architecture.md)** — what we're building, system shape, and decisions.
+2. **[`data-sources.md`](data-sources.md)** — upstream providers, cadence, caveats, and confirmed endpoints.
+3. **[`api-contracts.md`](api-contracts.md)** — JSON envelope and per-endpoint payloads; source of truth for backend and frontend.
+4. **[`frontend.md`](frontend.md)** — pages, components, charting, and UI conventions.
 
-- `[ ]` planned work
-- `[~]` in progress
-- `[x]` done
+## Feature notes
+
+- **[`plan-perf-initial-load.md`](plan-perf-initial-load.md)** — cold-cache diagnosis, pre-warm, cycle-scoped GRIB cache, single-flight, streamed detail.
+- **[`plan-dashboard-activity-toggle.md`](plan-dashboard-activity-toggle.md)** — Surf/Dive toggle and information-first spot ordering.
+- **[`plan-doc-colocation.md`](plan-doc-colocation.md)** — why docs are split between `docs/` and the code.
+
+## Co-located docs
+
+- [`lib/grib2/README.md`](../apps/web/src/lib/grib2/README.md) — GRIB2 decode seam; [`HISTORY.md`](../apps/web/src/lib/grib2/HISTORY.md) — superseded in-house codec plan.
+- [`server/nomads/README.md`](../apps/web/src/server/nomads/README.md) — NOMADS URL builders and upstream fetchers.
+- [`lib/components/README.md`](../apps/web/src/lib/components/README.md) — "now" panel scales and range meters.
+- [`fixtures/README.md`](../apps/web/fixtures/README.md) — provenance of every committed upstream sample.
+
+## Status markers
+
+- `[ ]` planned · `[~]` in progress · `[x]` done

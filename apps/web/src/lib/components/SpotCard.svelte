@@ -19,7 +19,7 @@
 		tideStateArrow,
 		type Units
 	} from '../format';
-	import type { SpotOverview, TidePreviewPoint } from '../providers/overview';
+	import type { SpotOverview, TidePreviewPoint } from '../dashboard';
 	import { favorites } from '../stores/favorites.svelte';
 	import { preferences } from '../stores/preferences.svelte';
 	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';

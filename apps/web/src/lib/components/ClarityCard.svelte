@@ -6,7 +6,7 @@
 	 * lags by 2-3 days and is frequently cloud-blocked.
 	 */
 	import { formatHeight, formatRelativeTime, titleCase, type Units } from '../format';
-	import type { ClarityObservation } from '../providers/coastwatch';
+	import type { ClarityObservation } from '../../server/providers/coastwatch';
 	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';
 
 	interface Props {

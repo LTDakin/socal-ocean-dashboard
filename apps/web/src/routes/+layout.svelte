@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import './layout.css';
-	import favicon from '#lib/assets/favicon.svg';
 	import { SHORT_DISCLAIMER, sourceNames } from '../lib/attribution';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import { preferences } from '../lib/stores/preferences.svelte';
@@ -19,10 +18,6 @@
 
 	const navLink = 'rounded-md px-3 py-1.5 text-foam/70 transition hover:bg-sea/20 hover:text-foam';
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 <div class="flex min-h-dvh flex-col">
 	<header class="sticky top-0 z-20 border-b border-sea/30 bg-abyss/85 backdrop-blur">

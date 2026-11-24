@@ -4,9 +4,9 @@ import type {
 	CurrentEnvelope,
 	ForecastEnvelope,
 	TidesEnvelope
-} from '../../../lib/providers';
-import { buildTidePreview } from '../../../lib/providers/overview';
-import { mergeSourceRecords } from '../../../lib/providers/sources';
+} from '../../../server/providers';
+import { buildTidePreview } from '../../../lib/dashboard';
+import { mergeSourceRecords } from '../../../server/providers/sources';
 import { getSpot } from '../../../lib/spots';
 import type { PageServerLoad } from './$types';
 

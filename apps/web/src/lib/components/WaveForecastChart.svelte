@@ -6,7 +6,7 @@
 	 */
 	import { buildWaveForecastOption } from '../charts/wave';
 	import type { Units } from '../format';
-	import type { DailyWaveForecast } from '../providers/gfswave';
+	import type { DailyWaveForecast } from '../../server/providers/gfswave';
 	import Chart from './Chart.svelte';
 
 	interface Props {

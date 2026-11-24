@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { decodeFields } from '../grib2';
 import { getSpot } from '../spots';
-import { sampleWavePoint } from '../providers/gfswave';
+import { sampleWavePoint } from '../../server/providers/gfswave';
 import {
 	DEFAULT_SURF_SCORE_CONFIG,
 	angleBetweenDeg,

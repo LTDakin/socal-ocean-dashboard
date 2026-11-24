@@ -146,7 +146,7 @@ queries used), so tests and dev never hit the live APIs.
 - **Station registry:** `https://www.ndbc.noaa.gov/activestations.xml`. NDBC
   republishes the CDIP SoCal buoys and puts the **CDIP station id in the name**,
   e.g. `"SCRIPPS Nearshore, CA (201)"` → `46254`; the adapter resolves a spot's
-  `cdipBuoyId` through that twin table (`lib/providers/ndbc.ts`; SoCal subset
+  `cdipBuoyId` through that twin table (`server/providers/ndbc.ts`; SoCal subset
   committed at `fixtures/ndbc/activestations.socal.json`).
 - SoCal twins that map onto seed spots: `201→46254`, `191→46232`, `284→46285`,
   `213→46253`, `215→46256`, `092→46222`. The other seed buoys are CDIP-only.
