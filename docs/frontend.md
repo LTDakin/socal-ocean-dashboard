@@ -65,11 +65,16 @@ cases (the `boat` type and the boat-only harbor spots were dropped).
   real data and pushes unobserved/sparse spots to the bottom, with the name as
   the final tiebreak.
 - **Styling:** Tailwind with a small design-token layer (ocean palette, type
-  scale). Dark-mode-first fits the dashboard aesthetic.
+  scale). Dark ocean colors remain the default; the optional light theme is
+  white/black with the same blue family as an accent. `lib/theme/palette.ts`
+  owns both role palettes and applies them to the CSS tokens. ECharts and the
+  range meters deliberately keep their original colored scales in both themes;
+  those fixed data colors live in `lib/theme/data-colors.ts`.
 - **Accessibility:** charts get table/alt fallbacks; color scales avoid
   red/green-only encodings (colorblind-safe). The "now" panel's range meters keep
   the number and the low/high end labels visible, so the colored position is
-  never the only cue.
+  never the only cue. Clarity keeps its band name and Secchi depth next to the
+  badge, so the green→red ramp is never the only cue either.
 
 ## Verification
 

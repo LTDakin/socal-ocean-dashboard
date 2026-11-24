@@ -9,6 +9,7 @@
 	 * is always shown, so color is never the only encoding.
 	 */
 	import { formatClockTime, formatDayLabel, formatFullDate, NO_VALUE } from '../format';
+	import { preferences } from '../stores/preferences.svelte';
 	import type { DailyWaveForecast } from '../../server/providers/gfswave';
 
 	interface Props {
@@ -20,9 +21,15 @@
 	let { daily, now }: Props = $props();
 
 	const todayKey = $derived(new Date(now).toISOString().slice(0, 10));
+	const activeTheme = $derived(preferences.theme);
 
-	function barClass(score: number | null): string {
+	function barClass(score: number | null, theme: typeof activeTheme): string {
 		if (score === null) return 'bg-transparent';
+		if (theme === 'light') {
+			if (score >= 7) return 'bg-surf';
+			if (score >= 4) return 'bg-sea/60';
+			return 'bg-sea/25';
+		}
 		if (score >= 7) return 'bg-cyan-300';
 		if (score >= 4) return 'bg-surf';
 		return 'bg-sea';
@@ -55,7 +62,7 @@
 					</span>
 					<div class="flex h-20 w-full items-end overflow-hidden rounded-md bg-sea/15">
 						<div
-							class="w-full rounded-t-md {barClass(day.surfScore)}"
+							class="w-full rounded-t-md {barClass(day.surfScore, activeTheme)}"
 							style={`height:${day.surfScore === null ? 0 : (day.surfScore / 10) * 100}%`}
 						></div>
 					</div>

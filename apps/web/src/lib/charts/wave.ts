@@ -16,12 +16,13 @@ import {
 	type Units
 } from '../format';
 import type { DailyWaveForecast } from '../../server/providers/gfswave';
+import { DATA_COLORS, withAlpha } from '../theme/data-colors';
 
-const WAVE_COLOR = '#4fb3d9';
-const SWELL_COLOR = '#8fd0e8';
-const PERIOD_COLOR = '#ffd479';
-const AXIS_COLOR = 'rgba(230, 244, 250, 0.35)';
-const LABEL_COLOR = '#a9c7d6';
+const WAVE_COLOR = DATA_COLORS.cyan;
+const SWELL_COLOR = DATA_COLORS.cyanLight;
+const PERIOD_COLOR = DATA_COLORS.yellow;
+const AXIS_COLOR = withAlpha(DATA_COLORS.chartText, 0.35);
+const LABEL_COLOR = DATA_COLORS.chartLabel;
 
 interface TooltipParam {
 	seriesName?: string;
@@ -52,10 +53,10 @@ export function buildWaveForecastOption(
 		},
 		tooltip: {
 			trigger: 'axis',
-			backgroundColor: 'rgba(4, 18, 31, 0.94)',
-			borderColor: 'rgba(79, 179, 217, 0.35)',
+			backgroundColor: withAlpha(DATA_COLORS.chartSurface, 0.94),
+			borderColor: withAlpha(DATA_COLORS.cyan, 0.35),
 			borderWidth: 1,
-			textStyle: { color: '#e6f4fa', fontSize: 11 },
+			textStyle: { color: DATA_COLORS.chartText, fontSize: 11 },
 			formatter: (params: unknown): string => {
 				const list = Array.isArray(params) ? (params as TooltipParam[]) : [];
 				const index = list[0]?.dataIndex ?? -1;
@@ -88,7 +89,7 @@ export function buildWaveForecastOption(
 				type: 'value',
 				name: units === 'imperial' ? 'ft' : 'm',
 				nameTextStyle: { color: LABEL_COLOR, fontSize: 10 },
-				splitLine: { lineStyle: { color: 'rgba(230, 244, 250, 0.08)' } },
+				splitLine: { lineStyle: { color: withAlpha(DATA_COLORS.chartText, 0.08) } },
 				axisLabel: { color: LABEL_COLOR, fontSize: 10 }
 			},
 			{

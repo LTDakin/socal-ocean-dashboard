@@ -7,7 +7,7 @@
 	 */
 	import { formatHeight, formatRelativeTime, titleCase, type Units } from '../format';
 	import type { ClarityObservation } from '../../server/providers/coastwatch';
-	import { CLARITY_BADGE, CLARITY_DOT } from './presentation';
+	import { clarityBadgeStyle, clarityDotStyle } from './presentation';
 
 	interface Props {
 		clarity: ClarityObservation | null;
@@ -30,11 +30,10 @@
 	{#if clarity && observed}
 		<div class="flex flex-wrap items-center gap-3">
 			<span
-				class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium {CLARITY_BADGE[
-					clarity.rating!
-				]}"
+				class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium"
+				style={clarityBadgeStyle(clarity.rating!)}
 			>
-				<span class="h-2 w-2 rounded-full {CLARITY_DOT[clarity.rating!]}"></span>
+				<span class="h-2 w-2 rounded-full" style={clarityDotStyle(clarity.rating!)}></span>
 				{titleCase(clarity.rating)}
 			</span>
 			<p class="text-lg font-semibold text-foam">

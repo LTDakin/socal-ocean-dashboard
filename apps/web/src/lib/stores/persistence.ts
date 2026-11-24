@@ -4,11 +4,14 @@
  */
 
 import type { Units } from '../format';
+import type { Theme } from '../theme/palette';
 
 /** `localStorage` key for the favorites list. */
 export const FAVORITES_STORAGE_KEY = 'socal-ocean.favorites';
 /** `localStorage` key for the units preference. */
 export const UNITS_STORAGE_KEY = 'socal-ocean.units';
+/** `localStorage` key for the color theme preference. */
+export const THEME_STORAGE_KEY = 'socal-ocean.theme';
 
 /**
  * Parse a stored favorites list. Returns `null` (not `[]`) when there is nothing
@@ -45,4 +48,14 @@ export function parseUnits(raw: string | null | undefined): Units | null {
 /** The other units mode. */
 export function alternateUnits(units: Units): Units {
 	return units === 'imperial' ? 'metric' : 'imperial';
+}
+
+/** Parse a stored theme preference, or `null` when absent/invalid. */
+export function parseTheme(raw: string | null | undefined): Theme | null {
+	return raw === 'dark' || raw === 'light' ? raw : null;
+}
+
+/** The other color theme. */
+export function alternateTheme(theme: Theme): Theme {
+	return theme === 'dark' ? 'light' : 'dark';
 }

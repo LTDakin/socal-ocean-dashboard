@@ -6,8 +6,9 @@
 	 */
 	import { formatRelativeTime } from '../format';
 	import { SHORT_DISCLAIMER } from '../attribution';
+	import { preferences } from '../stores/preferences.svelte';
 	import type { SourceRecord } from '../../server/providers/types';
-	import { providerLabel } from './presentation';
+	import { providerLabel, staleTextClass } from './presentation';
 
 	interface Props {
 		sources: SourceRecord[];
@@ -18,6 +19,8 @@
 	}
 
 	let { sources, generatedAt = null, now }: Props = $props();
+
+	const activeTheme = $derived(preferences.theme);
 </script>
 
 <footer class="rounded-xl border border-sea/20 bg-abyss/50 p-4 text-[11px] text-foam/45">
@@ -34,7 +37,7 @@
 					<span>· model run {formatRelativeTime(source.modelRun, now)}</span>
 				{/if}
 				{#if source.stale}
-					<span class="text-amber-200">· stale</span>
+					<span class={staleTextClass(activeTheme)}>· stale</span>
 				{/if}
 			</li>
 		{/each}

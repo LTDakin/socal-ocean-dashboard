@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+	alternateTheme,
 	alternateUnits,
 	parseFavorites,
+	parseTheme,
 	parseUnits,
 	serializeFavorites,
 	toggleFavorite
@@ -59,5 +61,19 @@ describe('units preference', () => {
 	it('alternates between modes', () => {
 		expect(alternateUnits('imperial')).toBe('metric');
 		expect(alternateUnits('metric')).toBe('imperial');
+	});
+});
+
+describe('theme preference', () => {
+	it('accepts only the two known themes', () => {
+		expect(parseTheme('dark')).toBe('dark');
+		expect(parseTheme('light')).toBe('light');
+		expect(parseTheme('sepia')).toBeNull();
+		expect(parseTheme(null)).toBeNull();
+	});
+
+	it('alternates between themes', () => {
+		expect(alternateTheme('dark')).toBe('light');
+		expect(alternateTheme('light')).toBe('dark');
 	});
 });

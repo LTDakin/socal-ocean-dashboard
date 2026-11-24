@@ -5,6 +5,7 @@
 	import { SHORT_DISCLAIMER, sourceNames } from '../lib/attribution';
 	import { favorites } from '../lib/stores/favorites.svelte';
 	import { preferences } from '../lib/stores/preferences.svelte';
+	import { applyTheme } from '../lib/theme/palette';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -16,6 +17,8 @@
 		preferences.hydrate();
 	});
 
+	$effect(() => applyTheme(preferences.theme));
+
 	const navLink = 'rounded-md px-3 py-1.5 text-foam/70 transition hover:bg-sea/20 hover:text-foam';
 </script>
 
@@ -23,8 +26,7 @@
 	<header class="sticky top-0 z-20 border-b border-sea/30 bg-abyss/85 backdrop-blur">
 		<div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
 			<a href={resolve('/')} class="text-foam" aria-label="So-cal Ocean Dashboard home">
-				<span class="text-lg font-semibold tracking-tight">So-cal Ocean</span>
-				<span class="ml-2 hidden text-xs text-foam/50 sm:inline">Surf &amp; dive conditions</span>
+				<span class="text-lg font-semibold tracking-tight">Plover: Surf &amp; Dive Conditions</span>
 			</a>
 			<nav class="flex items-center gap-1 text-sm">
 				<a href={resolve('/')} class={navLink}>Dashboard</a>
@@ -35,6 +37,14 @@
 					onclick={() => preferences.toggle()}
 				>
 					{preferences.units === 'imperial' ? 'ft · °F' : 'm · °C'}
+				</button>
+				<button
+					type="button"
+					class={navLink}
+					aria-label={`Switch to ${preferences.theme === 'dark' ? 'light' : 'dark'} theme`}
+					onclick={() => preferences.toggleTheme()}
+				>
+					{preferences.theme === 'dark' ? 'Light' : 'Dark'}
 				</button>
 				<a href={resolve('/about')} class={navLink}>About</a>
 			</nav>

@@ -5,6 +5,8 @@
 	import { compareSpotsByInfo, type SpotOverview } from '../lib/dashboard';
 	import type { SpotType } from '../lib/spots';
 	import { favorites } from '../lib/stores/favorites.svelte';
+	import { preferences } from '../lib/stores/preferences.svelte';
+	import { favoriteToggleClass, noticeClass } from '../lib/components/presentation';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -19,6 +21,7 @@
 	let favoritesOnly = $state(false);
 	let refreshing = $state(false);
 	let activity = $state<SpotType>('surf');
+	const activeTheme = $derived(preferences.theme);
 
 	const spots = $derived(data.overview?.data.spots ?? []);
 
@@ -110,7 +113,7 @@
 				/>
 				<button
 					type="button"
-					class="{control} {favoritesOnly ? 'border-amber-300/60 text-amber-200' : ''}"
+					class="{control} {favoriteToggleClass(favoritesOnly, activeTheme)}"
 					aria-pressed={favoritesOnly}
 					onclick={() => (favoritesOnly = !favoritesOnly)}
 				>
@@ -123,9 +126,7 @@
 		</div>
 
 		{#if data.overview?.stale}
-			<p
-				class="rounded-md border border-amber-300/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
-			>
+			<p class="rounded-md border px-3 py-2 text-xs {noticeClass(activeTheme)}">
 				Some conditions are stale — showing the last good values while the upstream recovers.
 			</p>
 		{/if}

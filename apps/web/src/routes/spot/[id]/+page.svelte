@@ -7,6 +7,7 @@
 	import TideChart from '../../../lib/components/TideChart.svelte';
 	import WaveForecastChart from '../../../lib/components/WaveForecastChart.svelte';
 	import { formatRelativeTime, regionLabel } from '../../../lib/format';
+	import { favoriteBorderClass, noticeClass } from '../../../lib/components/presentation';
 	import { favorites } from '../../../lib/stores/favorites.svelte';
 	import { preferences } from '../../../lib/stores/preferences.svelte';
 	import type { PageProps } from './$types';
@@ -16,6 +17,7 @@
 	const spot = $derived(data.spot);
 	const now = $derived(data.now);
 	const units = $derived(preferences.units);
+	const activeTheme = $derived(preferences.theme);
 	const favorite = $derived(favorites.has(spot.id));
 
 	const current = $derived(data.current.data?.data.current ?? null);
@@ -53,7 +55,9 @@
 			</div>
 			<button
 				type="button"
-				class="rounded-md border border-sea/40 px-3 py-1.5 text-sm transition hover:border-amber-300/60"
+				class="rounded-md border border-sea/40 px-3 py-1.5 text-sm transition {favoriteBorderClass(
+					activeTheme
+				)}"
 				aria-pressed={favorite}
 				onclick={() => favorites.toggle(spot.id)}
 			>
@@ -64,9 +68,7 @@
 
 	{#await data.provenance then provenance}
 		{#if provenance.stale}
-			<p
-				class="rounded-md border border-amber-300/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
-			>
+			<p class="rounded-md border px-3 py-2 text-xs {noticeClass(activeTheme)}">
 				Some conditions are stale — showing the last good values while the upstream recovers.
 			</p>
 		{/if}
